@@ -7,6 +7,7 @@
 #include <xtensor/xview.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xadapt.hpp>
+
 /**
  * @brief Consider the ellipses(2D)/ellipsoids(3D) F_A(p) = (p-a)^T A (p-a) <=1 and F_B(p) = (p-b)^T B (p-b) <=1.
  * The Rimon method computes the point p_rimon where the elliptical surface F_A first touches F_B.

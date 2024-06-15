@@ -6,7 +6,6 @@
 #include <xtensor/xview.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xadapt.hpp>
-#include <tuple>
 
 class ScalingFunction3d {
     public:
