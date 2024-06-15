@@ -1,15 +1,35 @@
 #include "scalingFunction3d.hpp"
+xt::xarray<double> ScalingFunction3d::getRotationMatrix(const xt::xarray<double>& q) const{
+
+    double qx = q(0), qy = q(1), qz = q(2), qw = q(3);
+    xt::xarray<double> R = xt::zeros<double>({3, 3});
+
+    R(0,0) = 2*std::pow(qw, 2) + 2*std::pow(qx, 2) - 1;
+    R(0,1) = -2*qw*qz + 2*qx*qy;
+    R(0,2) = 2*qw*qy + 2*qx*qz;
+    R(1,0) = 2*qw*qz + 2*qx*qy;
+    R(1,1) = 2*std::pow(qw, 2) + 2*std::pow(qy, 2) - 1;
+    R(1,2) = -2*qw*qx + 2*qy*qz;
+    R(2,0) = -2*qw*qy + 2*qx*qz;
+    R(2,1) = 2*qw*qx + 2*qy*qz;
+    R(2,2) = 2*std::pow(qw, 2) + 2*std::pow(qz, 2) - 1;
+
+    return R;
+}
+
 xt::xarray<double> ScalingFunction3d::getBodyP(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                                const xt::xarray<double>& R) const{
+                                                const xt::xarray<double>& q) const{
+    xt::xarray<double> R = getRotationMatrix(q);
     return xt::linalg::dot(xt::transpose(R, {1, 0}), (p - d));
 }
 
-xt::xarray<double> ScalingFunction3d::getBodyPdp(const xt::xarray<double>& R) const{
+xt::xarray<double> ScalingFunction3d::getBodyPdp(const xt::xarray<double>& q) const{
+    xt::xarray<double> R = getRotationMatrix(q);
     return xt::transpose(R, {1, 0});
 }
 
 xt::xarray<double> ScalingFunction3d::getBodyPdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                                const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                                const xt::xarray<double>& q) const{
     
     int dim_p = 3, dim_q = 4;
     int dim_x = dim_p + dim_q;
@@ -18,6 +38,7 @@ xt::xarray<double> ScalingFunction3d::getBodyPdx(const xt::xarray<double>& p, co
     double px = p(0), py = p(1), pz = p(2);
     xt::xarray<double> P_dx = xt::zeros<double>({dim_p, dim_x});
 
+    xt::xarray<double> R = getRotationMatrix(q);
     xt::view(P_dx, xt::all(), xt::range(0, dim_p)) = - xt::transpose(R, {1, 0});
     P_dx(0,3) = -4*qx*(dx - px) - 2*qy*(dy - py) - 2*qz*(dz - pz);
     P_dx(0,4) = 2*qw*(dz - pz) - 2*qx*(dy - py);
@@ -221,10 +242,10 @@ xt::xarray<double> ScalingFunction3d::getBodyPdpdxdx() const{
 }
 
 xt::xarray<double> ScalingFunction3d::getWorldFdp(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                        const xt::xarray<double>& q) const{
     
-    xt::xarray<double> P = getBodyP(p, d, R); // shape (dim_p, )
-    xt::xarray<double> P_dp = getBodyPdp(R); // shape (dim_p, dim_p)
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p, )
+    xt::xarray<double> P_dp = getBodyPdp(q); // shape (dim_p, dim_p)
 
     xt::xarray<double> F_dP = getBodyFdP(P); // shape (dim_p, )
     xt::xarray<double> F_dp = xt::linalg::dot(F_dP, P_dp); // shape (dim_p, )
@@ -233,14 +254,14 @@ xt::xarray<double> ScalingFunction3d::getWorldFdp(const xt::xarray<double>& p, c
 }
 
 xt::xarray<double> ScalingFunction3d::getWorldFdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                        const xt::xarray<double>& q) const{
     
     if (isMoving == false){
         return xt::zeros<double>({7});
     }
 
-    xt::xarray<double> P = getBodyP(p, d, R); // shape (dim_p, )
-    xt::xarray<double> P_dx = getBodyPdx(p, d, q, R); // shape (dim_p, dim_x)
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p, )
+    xt::xarray<double> P_dx = getBodyPdx(p, d, q); // shape (dim_p, dim_x)
 
     xt::xarray<double> F_dP = getBodyFdP(P); // shape (dim_p, )
     xt::xarray<double> F_dx = xt::linalg::dot(F_dP, P_dx); // shape (dim_x, )
@@ -249,10 +270,10 @@ xt::xarray<double> ScalingFunction3d::getWorldFdx(const xt::xarray<double>& p, c
 }
 
 xt::xarray<double> ScalingFunction3d::getWorldFdpdp(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                        const xt::xarray<double>& q) const{
     
-    xt::xarray<double> P = getBodyP(p, d, R); // shape (dim_p, )
-    xt::xarray<double> P_dp = getBodyPdp(R); // shape (dim_p, dim_p)
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p, )
+    xt::xarray<double> P_dp = getBodyPdp(q); // shape (dim_p, dim_p)
 
     xt::xarray<double> F_dPdP = getBodyFdPdP(P); // shape (dim_p, dim_p)
     xt::xarray<double> F_dpdp = xt::linalg::dot(xt::transpose(P_dp, {1,0}), xt::linalg::dot(F_dPdP, P_dp)); // shape (dim_p, dim_p)
@@ -261,15 +282,15 @@ xt::xarray<double> ScalingFunction3d::getWorldFdpdp(const xt::xarray<double>& p,
 }
 
 xt::xarray<double> ScalingFunction3d::getWorldFdpdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                        const xt::xarray<double>& q) const{
     
     if (isMoving == false){
         return xt::zeros<double>({3,7});
     }
 
-    xt::xarray<double> P = getBodyP(p, d, R); // shape (dim_p, )
-    xt::xarray<double> P_dp = getBodyPdp(R); // shape (dim_p, dim_p)
-    xt::xarray<double> P_dx = getBodyPdx(p, d, q, R); // shape (dim_p, dim_x)
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p, )
+    xt::xarray<double> P_dp = getBodyPdp(q); // shape (dim_p, dim_p)
+    xt::xarray<double> P_dx = getBodyPdx(p, d, q); // shape (dim_p, dim_x)
     xt::xarray<double> P_dpdx = getBodyPdpdx(q); // shape (dim_p, dim_p, dim_x)
 
     xt::xarray<double> F_dP = getBodyFdP(P); // shape (dim_p, )
@@ -282,14 +303,14 @@ xt::xarray<double> ScalingFunction3d::getWorldFdpdx(const xt::xarray<double>& p,
 }
 
 xt::xarray<double> ScalingFunction3d::getWorldFdxdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                        const xt::xarray<double>& q) const{
     
     if (isMoving == false){
         return xt::zeros<double>({7,7});
     }
 
-    xt::xarray<double> P = getBodyP(p, d, R); // shape (dim_p, )
-    xt::xarray<double> P_dx = getBodyPdx(p, d, q, R); // shape (dim_p, dim_x)
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p, )
+    xt::xarray<double> P_dx = getBodyPdx(p, d, q); // shape (dim_p, dim_x)
     xt::xarray<double> P_dxdx = getBodyPdxdx(p, d, q); // shape (dim_p, dim_x, dim_x)
 
     xt::xarray<double> F_dP = getBodyFdP(P); // shape (dim_p, )
@@ -302,10 +323,10 @@ xt::xarray<double> ScalingFunction3d::getWorldFdxdx(const xt::xarray<double>& p,
 }
 
 xt::xarray<double> ScalingFunction3d::getWorldFdpdpdp(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                        const xt::xarray<double>& q) const{
                             
-    xt::xarray<double> P = getBodyP(p, d, R); // shape (dim_p, )
-    xt::xarray<double> P_dp = getBodyPdp(R); // shape (dim_p, dim_p)
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p, )
+    xt::xarray<double> P_dp = getBodyPdp(q); // shape (dim_p, dim_p)
 
     xt::xarray<double> F_dPdPdP = getBodyFdPdPdP(P); // shape (dim_p, dim_p, dim_p)
 
@@ -319,15 +340,15 @@ xt::xarray<double> ScalingFunction3d::getWorldFdpdpdp(const xt::xarray<double>& 
 }
 
 xt::xarray<double> ScalingFunction3d::getWorldFdpdpdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                        const xt::xarray<double>& q) const{
     
     if (isMoving == false){
         return xt::zeros<double>({3,3,7});
     }
 
-    xt::xarray<double> P = getBodyP(p, d, R); // shape (dim_p, )
-    xt::xarray<double> P_dp = getBodyPdp(R); // shape (dim_p, dim_p)
-    xt::xarray<double> P_dx = getBodyPdx(p, d, q, R); // shape (dim_p, dim_x)
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p, )
+    xt::xarray<double> P_dp = getBodyPdp(q); // shape (dim_p, dim_p)
+    xt::xarray<double> P_dx = getBodyPdx(p, d, q); // shape (dim_p, dim_x)
     xt::xarray<double> P_dpdx = getBodyPdpdx(q); // shape (dim_p, dim_p, dim_x)
 
     xt::xarray<double> F_dPdP = getBodyFdPdP(P); // shape (dim_p, dim_p)
@@ -348,14 +369,14 @@ xt::xarray<double> ScalingFunction3d::getWorldFdpdpdx(const xt::xarray<double>& 
 }
 
 xt::xarray<double> ScalingFunction3d::getWorldFdpdxdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q, const xt::xarray<double>& R) const{
+                                        const xt::xarray<double>& q) const{
     
     if (isMoving == false){
         return xt::zeros<double>({3,7,7});
     }
-    xt::xarray<double> P = getBodyP(p, d, R); // shape (dim_p, )
-    xt::xarray<double> P_dp = getBodyPdp(R); // shape (dim_p, dim_p)
-    xt::xarray<double> P_dx = getBodyPdx(p, d, q, R); // shape (dim_p, dim_x)
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p, )
+    xt::xarray<double> P_dp = getBodyPdp(q); // shape (dim_p, dim_p)
+    xt::xarray<double> P_dx = getBodyPdx(p, d, q); // shape (dim_p, dim_x)
     xt::xarray<double> P_dpdx = getBodyPdpdx(q); // shape (dim_p, dim_p, dim_x)
     xt::xarray<double> P_dxdx = getBodyPdxdx(p, d, q); // shape (dim_p, dim_x, dim_x)
     xt::xarray<double> P_dpdxdx = getBodyPdpdxdx(); // shape (dim_p, dim_p, dim_x, dim_x)

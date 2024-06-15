@@ -1,18 +1,18 @@
-#ifndef SCALING_FUNCTION_3D_HPP
-#define SCALING_FUNCTION_3D_HPP
+#ifndef SCALING_FUNCTION_2D_HPP
+#define SCALING_FUNCTION_2D_HPP
 
 #include <xtensor/xarray.hpp>
 #include <xtensor/xio.hpp>
 #include <xtensor/xview.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xadapt.hpp>
-#include <tuple>
+#include <cmath>
 
-class ScalingFunction3d {
+class ScalingFunction2d {
     public:
         bool isMoving = false;
-        ScalingFunction3d(bool isMoving_) : isMoving(isMoving_) {};
-        virtual ~ScalingFunction3d() = default;
+        ScalingFunction2d(bool isMoving_) : isMoving(isMoving_) {};
+        virtual ~ScalingFunction2d() = default;
 
         /**
          * @brief Calculate the scaling function F(P).
@@ -47,156 +47,156 @@ class ScalingFunction3d {
         virtual xt::xarray<double> getBodyFdPdPdP(const xt::xarray<double>& P) const = 0;
 
         /**
-         * @brief Get the rotation matrix R(q)
+         * @brief Get the rotation matrix R(theta)
          * 
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> R, shape: (dim_p, dim_p)
          */
-        xt::xarray<double> getRotationMatrix(const xt::xarray<double>& q) const;
+        xt::xarray<double> getRotationMatrix(double theta) const;
 
         /**
-         * @brief Get the position in body P = R(q).T (p - d)
+         * @brief Get the position in body P = R(theta).T (p - d)
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> P, shape: (dim_p,)
          */
         xt::xarray<double> getBodyP(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                    const xt::xarray<double>& q) const;
+                                    double theta) const;
 
         /**
-         * @brief P = R(q).T (p - d) because p = R(q) * P + d.
+         * @brief P = R(theta).T (p - d) because p = R(theta) * P + d.
          * 
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> P_dp, shape: (dim_p, dim_p)
          */
-        xt::xarray<double> getBodyPdp(const xt::xarray<double>& q) const;
+        xt::xarray<double> getBodyPdp(double theta) const;
 
         /**
-         * @brief P = R(q).T (p - d). Get the gradient of P w.r.t. x=[d,q]. dim_x = dim_p + dim_q.
+         * @brief P = R(theta).T (p - d). Get the gradient of P w.r.t. x=[d,theta]. dim_x = dim_p + 1.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> P_dx, shape: (dim_p, dim_x)
          */
-        xt::xarray<double> getBodyPdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-            const xt::xarray<double>& q) const;
+        xt::xarray<double> getBodyPdx(const xt::xarray<double>& p, const xt::xarray<double>& d, double theta) const;
         
         /**
-         * @brief P = R(q).T (p - d). x=[d,q]. Get d^2P/dpdx. dim_x = dim_p + dim_q.
+         * @brief P = R(theta).T (p - d). x=[d,theta]. Get d^2P/dpdx. dim_x = dim_p + 1.
          * 
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> P_dxdx, shape: (dim_p, dim_p, dim_x)
          */
-        xt::xarray<double> getBodyPdpdx(const xt::xarray<double>& q) const;
+        xt::xarray<double> getBodyPdpdx(double theta) const;
 
         /**
-         * @brief P = R(q).T (p - d). x=[d,q]. Get d^2P/dxdx. dim_x = dim_p + dim_q.
+         * @brief P = R(theta).T (p - d). x=[d,theta]. Get d^2P/dxdx. dim_x = dim_p + 1.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> P_dxdx, shape: (dim_p, dim_x, dim_x)
          */
-        xt::xarray<double> getBodyPdxdx(const xt::xarray<double>& p, const xt::xarray<double>& d, const xt::xarray<double>& q) const;
+        xt::xarray<double> getBodyPdxdx(const xt::xarray<double>& p, const xt::xarray<double>& d, double theta) const;
 
         /**
-         * @brief P = R(q).T (p - d). x=[d,q]. Get d^3P/dpdxdx. dim_x = dim_p + dim_q.
+         * @brief P = R(theta).T (p - d). x=[d,theta]. Get d^3P/dpdxdx. dim_x = dim_p + 1.
          * 
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> P_dpdx, shape: (dim_p, dim_p, dim_x, dim_x)
          */
-        xt::xarray<double> getBodyPdpdxdx() const;
+        xt::xarray<double> getBodyPdpdxdx(double theta) const;
 
         /**
-         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get dF/dp.
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get dF/dp.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> F_dp, shape: (dim_p,)
          */
         xt::xarray<double> getWorldFdp(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q) const;
+                                        double theta) const;
 
         /**
-         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get dF/dx.
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get dF/dx.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> F_dx, shape: (dim_x,) 
          */
         xt::xarray<double> getWorldFdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q) const;
+                                        double theta) const;
 
         /**
-         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get d^2F/dpdp.
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get d^2F/dpdp.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> F_dpdp, shape: (dim_p, dim_p) 
          */
         xt::xarray<double> getWorldFdpdp(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q) const;
+                                        double theta) const;
         
         /**
-         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get d^2F/dpdx.
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get d^2F/dpdx.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> F_dpdx, shape: (dim_p, dim_x) 
          */
         xt::xarray<double> getWorldFdpdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q) const;
+                                        double theta) const;
 
         /**
-         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get d^2F/dxdx.
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get d^2F/dxdx.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> F_dxdx, shape: (dim_x, dim_x) 
          */
         xt::xarray<double> getWorldFdxdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q) const;
+                                        double theta) const;
         
         /**
-         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get d^3F/dpdpdp.
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get d^3F/dpdpdp.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> F_dpdpdp, shape: (dim_p, dim_p, dim_p) 
          */
         xt::xarray<double> getWorldFdpdpdp(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q) const;
+                                        double theta) const;
         
         /**
-         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get d^3F/dpdpdx.
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get d^3F/dpdpdx.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> F_dpdpdx, shape: (dim_p, dim_p, dim_x) 
          */
         xt::xarray<double> getWorldFdpdpdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q) const;
+                                        double theta) const;
 
         /**
-         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get d^3F/dpdxdx.
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get d^3F/dpdxdx.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
          * @param d Origin of the body frame in the world frame, shape: (dim_p,)
-         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @param theta Rotation angle representing R(theta)
          * @return xt::xarray<double> F_dpdxdx, shape: (dim_p, dim_x, dim_x) 
          */
         xt::xarray<double> getWorldFdpdxdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
-                                        const xt::xarray<double>& q) const;
+                                        double theta) const;
         
 };
 
-#endif // SCALING_FUNCTION_3D_HPP
+#endif // SCALING_FUNCTION_2D_HPP

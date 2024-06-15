@@ -36,90 +36,91 @@ SF = doh.Ellipsoid3d(True, Q_np, mu_np)
 F = ((P-mu_np[:,np.newaxis]).T @ Q_np @ (P-mu_np[:,np.newaxis]))[0]
 
 dim_P, dim_p, dim_x = 3, 3, 7
-# # F_dP
-# theory = 2 * Q_np @ (P_np-mu_np)
-# answer = SF.getBodyFdP(P_np)
-# print(theory - answer)
 
-# # F_dPdP
-# theory = 2 * Q_np
-# answer = SF.getBodyFdPdP(P_np)
-# print(theory - answer)
+# F_dP
+theory = 2 * Q_np @ (P_np-mu_np)
+answer = SF.getBodyFdP(P_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
-# # F_dPdPdP
-# theory = np.zeros((dim_P,dim_P,dim_P))
-# answer = SF.getBodyFdPdPdP(P_np)
-# print(theory - answer)
+# F_dPdP
+theory = 2 * Q_np
+answer = SF.getBodyFdPdP(P_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
-# # F_dp
-# theory = np.zeros((dim_p))
-# for i in range(dim_p):
-#     symbol = F.diff(p_vars[i])
-#     theory[i] = symbol.subs(sub_pairs)
-# answer = SF.getWorldFdp(p_np, d_np, q_np, R_np)
-# print(theory - answer)
+# F_dPdPdP
+theory = np.zeros((dim_P,dim_P,dim_P))
+answer = SF.getBodyFdPdPdP(P_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
-# # F_dx
-# theory = np.zeros((dim_x))
-# for i in range(dim_x):
-#     symbol = F.diff(x_vars[i])
-#     theory[i] = symbol.subs(sub_pairs)
-# answer = SF.getWorldFdx(p_np, d_np, q_np, R_np)
-# print(theory - answer)
+# F_dp
+theory = np.zeros((dim_p))
+for i in range(dim_p):
+    symbol = F.diff(p_vars[i])
+    theory[i] = symbol.subs(sub_pairs)
+answer = SF.getWorldFdp(p_np, d_np, q_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
-# # F_dpdp
-# theory = np.zeros((dim_p,dim_p))
-# for i in range(dim_p):
-#     for j in range(dim_p):
-#         symbol = F.diff(p_vars[i]).diff(p_vars[j])
-#         theory[i,j] = symbol.subs(sub_pairs)
-# answer = SF.getWorldFdpdp(p_np, d_np, q_np, R_np)
-# print(theory - answer)
+# F_dx
+theory = np.zeros((dim_x))
+for i in range(dim_x):
+    symbol = F.diff(x_vars[i])
+    theory[i] = symbol.subs(sub_pairs)
+answer = SF.getWorldFdx(p_np, d_np, q_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
-# # F_dpdx
-# theory = np.zeros((dim_p,dim_x))
-# for i in range(dim_p):
-#     for j in range(dim_x):
-#         symbol = F.diff(p_vars[i]).diff(x_vars[j])
-#         theory[i,j] = symbol.subs(sub_pairs)
-# answer = SF.getWorldFdpdx(p_np, d_np, q_np, R_np)
-# print(theory - answer)
+# F_dpdp
+theory = np.zeros((dim_p,dim_p))
+for i in range(dim_p):
+    for j in range(dim_p):
+        symbol = F.diff(p_vars[i]).diff(p_vars[j])
+        theory[i,j] = symbol.subs(sub_pairs)
+answer = SF.getWorldFdpdp(p_np, d_np, q_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
+
+# F_dpdx
+theory = np.zeros((dim_p,dim_x))
+for i in range(dim_p):
+    for j in range(dim_x):
+        symbol = F.diff(p_vars[i]).diff(x_vars[j])
+        theory[i,j] = symbol.subs(sub_pairs)
+answer = SF.getWorldFdpdx(p_np, d_np, q_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
 # F_dxdx
-# theory = np.zeros((dim_x,dim_x))
-# for i in range(dim_x):
-#     for j in range(dim_x):
-#         symbol = F.diff(x_vars[i]).diff(x_vars[j])
-#         theory[i,j] = symbol.subs(sub_pairs)
-# answer = SF.getWorldFdxdx(p_np, d_np, q_np, R_np)
-# print(theory - answer)
+theory = np.zeros((dim_x,dim_x))
+for i in range(dim_x):
+    for j in range(dim_x):
+        symbol = F.diff(x_vars[i]).diff(x_vars[j])
+        theory[i,j] = symbol.subs(sub_pairs)
+answer = SF.getWorldFdxdx(p_np, d_np, q_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
 # F_dpdpdp
-# theory = np.zeros((dim_p,dim_p,dim_p))
-# for i in range(dim_p):
-#     for j in range(dim_p):
-#         for k in range(dim_p):
-#             symbol = F.diff(p_vars[i]).diff(p_vars[j]).diff(p_vars[k])
-#             theory[i,j,k] = symbol.subs(sub_pairs)
-# answer = SF.getWorldFdpdpdp(p_np, d_np, q_np, R_np)
-# print(theory - answer)
+theory = np.zeros((dim_p,dim_p,dim_p))
+for i in range(dim_p):
+    for j in range(dim_p):
+        for k in range(dim_p):
+            symbol = F.diff(p_vars[i]).diff(p_vars[j]).diff(p_vars[k])
+            theory[i,j,k] = symbol.subs(sub_pairs)
+answer = SF.getWorldFdpdpdp(p_np, d_np, q_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
 # F_dpdpdx
-# theory = np.zeros((dim_p,dim_p,dim_x))
-# for i in range(dim_p):
-#     for j in range(dim_p):
-#         for k in range(dim_x):
-#             symbol = F.diff(p_vars[i]).diff(p_vars[j]).diff(x_vars[k])
-#             theory[i,j,k] = symbol.subs(sub_pairs)
-# answer = SF.getWorldFdpdpdx(p_np, d_np, q_np, R_np)
-# print(theory - answer)
+theory = np.zeros((dim_p,dim_p,dim_x))
+for i in range(dim_p):
+    for j in range(dim_p):
+        for k in range(dim_x):
+            symbol = F.diff(p_vars[i]).diff(p_vars[j]).diff(x_vars[k])
+            theory[i,j,k] = symbol.subs(sub_pairs)
+answer = SF.getWorldFdpdpdx(p_np, d_np, q_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
 
 # F_dpdxdx
-# theory = np.zeros((dim_p,dim_x,dim_x))
-# for i in range(dim_p):
-#     for j in range(dim_x):
-#         for k in range(dim_x):
-#             symbol = F.diff(p_vars[i]).diff(x_vars[j]).diff(x_vars[k])
-#             theory[i,j,k] = symbol.subs(sub_pairs)
-# answer = SF.getWorldFdpdxdx(p_np, d_np, q_np, R_np)
-# print(theory - answer)
+theory = np.zeros((dim_p,dim_x,dim_x))
+for i in range(dim_p):
+    for j in range(dim_x):
+        for k in range(dim_x):
+            symbol = F.diff(p_vars[i]).diff(x_vars[j]).diff(x_vars[k])
+            theory[i,j,k] = symbol.subs(sub_pairs)
+answer = SF.getWorldFdpdxdx(p_np, d_np, q_np)
+print(np.isclose(theory, answer, rtol=1e-10, atol=1e-10))
