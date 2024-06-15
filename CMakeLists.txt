@@ -20,6 +20,10 @@ pybind11_add_module(
     src/logSumExp3d.cpp
     src/hyperplane3d.cpp
     src/superquadrics3d.cpp
+    src/scalingFunction2d.cpp
+    src/ellipsoid2d.cpp
+    src/logSumExp2d.cpp
+    src/hyperplane2d.cpp
 )
 
 # If OpenBLAS provides a target, use it directly. If not, specify the library path as you did.

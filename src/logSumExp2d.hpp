@@ -1,5 +1,5 @@
-#ifndef LOG_SUM_EXP_3D_HPP
-#define LOG_SUM_EXP_3D_HPP
+#ifndef LOG_SUM_EXP_2D_HPP
+#define LOG_SUM_EXP_2D_HPP
 
 #include <xtensor/xarray.hpp>
 #include <xtensor/xio.hpp>
@@ -7,19 +7,19 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xadapt.hpp>
 
-#include "scalingFunction3d.hpp"
+#include "scalingFunction2d.hpp"
 
 
-class LogSumExp3d : public ScalingFunction3d {
+class LogSumExp2d : public ScalingFunction2d {
     public:
-        xt::xarray<double> A; // Shape: (N, 3)
+        xt::xarray<double> A; // Shape: (N, 2)
         xt::xarray<double> b; // Shape: (N,)
         double kappa; // positive scalar
 
-        LogSumExp3d(bool isMoving_, const xt::xarray<double>& A_, const xt::xarray<double>& b_,
-                    double kappa_):ScalingFunction3d(isMoving_), A(A_), b(b_), kappa(kappa_) {
-            if (A_.shape()[1] != 3){
-                throw std::invalid_argument("A must have 3 columns.");
+        LogSumExp2d(bool isMoving_, const xt::xarray<double>& A_, const xt::xarray<double>& b_,
+                    double kappa_):ScalingFunction2d(isMoving_), A(A_), b(b_), kappa(kappa_) {
+            if (A_.shape()[1] != 2){
+                throw std::invalid_argument("A must have 2 columns.");
             }
             if (A_.shape()[0] != b_.shape()[0]){
                 throw std::invalid_argument("A and b must have the same number of rows.");
@@ -29,7 +29,7 @@ class LogSumExp3d : public ScalingFunction3d {
             }
             
         }
-        ~LogSumExp3d() = default;
+        ~LogSumExp2d() = default;
 
         /**
          * @brief Calculate the scaling function F(P) = log[sum(exp[k(A P + b)])/len(A)] + 1.

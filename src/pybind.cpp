@@ -12,6 +12,10 @@
 #include "logSumExp3d.hpp"
 #include "hyperplane3d.hpp"
 #include "superquadrics3d.hpp"
+#include "scalingFunction2d.hpp"
+#include "ellipsoid2d.hpp"
+#include "logSumExp2d.hpp"
+#include "hyperplane2d.hpp"
 
 namespace py = pybind11;
 
@@ -52,7 +56,6 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx);
-
 
     py::class_<LogSumExp3d, ScalingFunction3d>(m, "LogSumExp3d")
         .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&, double>())
@@ -122,4 +125,76 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx);
+
+    py::class_<ScalingFunction2d>(m, "ScalingFunction2d");
+
+    py::class_<Ellipsoid2d, ScalingFunction2d>(m, "Ellipsoid2d")
+        .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&>())
+        .def("getBodyF", &Ellipsoid2d::getBodyF)
+        .def("getBodyFdP", &Ellipsoid2d::getBodyFdP)
+        .def("getBodyFdPdP", &Ellipsoid2d::getBodyFdPdP)
+        .def("getBodyFdPdPdP", &Ellipsoid2d::getBodyFdPdPdP)
+        .def_readwrite("isMoving", &ScalingFunction2d::isMoving)
+        .def("getRotationMatrix", &ScalingFunction2d::getRotationMatrix)
+        .def("getBodyP", &ScalingFunction2d::getBodyP)
+        .def("getBodyPdp", &ScalingFunction2d::getBodyPdp)
+        .def("getBodyPdx", &ScalingFunction2d::getBodyPdx)
+        .def("getBodyPdpdx", &ScalingFunction2d::getBodyPdpdx)
+        .def("getBodyPdxdx", &ScalingFunction2d::getBodyPdxdx)
+        .def("getBodyPdpdxdx", &ScalingFunction2d::getBodyPdpdxdx)
+        .def("getWorldFdp", &ScalingFunction2d::getWorldFdp)
+        .def("getWorldFdx", &ScalingFunction2d::getWorldFdx)
+        .def("getWorldFdpdp", &ScalingFunction2d::getWorldFdpdp)
+        .def("getWorldFdpdx", &ScalingFunction2d::getWorldFdpdx)
+        .def("getWorldFdxdx", &ScalingFunction2d::getWorldFdxdx)
+        .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
+        .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
+        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx);
+
+
+    py::class_<LogSumExp2d, ScalingFunction2d>(m, "LogSumExp2d")
+        .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&, double>())
+        .def("getBodyF", &LogSumExp2d::getBodyF)
+        .def("getBodyFdP", &LogSumExp2d::getBodyFdP)
+        .def("getBodyFdPdP", &LogSumExp2d::getBodyFdPdP)
+        .def("getBodyFdPdPdP", &LogSumExp2d::getBodyFdPdPdP)
+        .def_readwrite("isMoving", &ScalingFunction2d::isMoving)
+        .def("getRotationMatrix", &ScalingFunction2d::getRotationMatrix)
+        .def("getBodyP", &ScalingFunction2d::getBodyP)
+        .def("getBodyPdp", &ScalingFunction2d::getBodyPdp)
+        .def("getBodyPdx", &ScalingFunction2d::getBodyPdx)
+        .def("getBodyPdpdx", &ScalingFunction2d::getBodyPdpdx)
+        .def("getBodyPdxdx", &ScalingFunction2d::getBodyPdxdx)
+        .def("getBodyPdpdxdx", &ScalingFunction2d::getBodyPdpdxdx)
+        .def("getWorldFdp", &ScalingFunction2d::getWorldFdp)
+        .def("getWorldFdx", &ScalingFunction2d::getWorldFdx)
+        .def("getWorldFdpdp", &ScalingFunction2d::getWorldFdpdp)
+        .def("getWorldFdpdx", &ScalingFunction2d::getWorldFdpdx)
+        .def("getWorldFdxdx", &ScalingFunction2d::getWorldFdxdx)
+        .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
+        .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
+        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx);
+    
+    py::class_<Hyperplane2d, ScalingFunction2d>(m, "Hyperplane2d")
+        .def(py::init<bool, const xt::xarray<double>&, double>())
+        .def("getBodyF", &Hyperplane2d::getBodyF)
+        .def("getBodyFdP", &Hyperplane2d::getBodyFdP)
+        .def("getBodyFdPdP", &Hyperplane2d::getBodyFdPdP)
+        .def("getBodyFdPdPdP", &Hyperplane2d::getBodyFdPdPdP)
+        .def_readwrite("isMoving", &ScalingFunction2d::isMoving)
+        .def("getRotationMatrix", &ScalingFunction2d::getRotationMatrix)
+        .def("getBodyP", &ScalingFunction2d::getBodyP)
+        .def("getBodyPdp", &ScalingFunction2d::getBodyPdp)
+        .def("getBodyPdx", &ScalingFunction2d::getBodyPdx)
+        .def("getBodyPdpdx", &ScalingFunction2d::getBodyPdpdx)
+        .def("getBodyPdxdx", &ScalingFunction2d::getBodyPdxdx)
+        .def("getBodyPdpdxdx", &ScalingFunction2d::getBodyPdpdxdx)
+        .def("getWorldFdp", &ScalingFunction2d::getWorldFdp)
+        .def("getWorldFdx", &ScalingFunction2d::getWorldFdx)
+        .def("getWorldFdpdp", &ScalingFunction2d::getWorldFdpdp)
+        .def("getWorldFdpdx", &ScalingFunction2d::getWorldFdpdx)
+        .def("getWorldFdxdx", &ScalingFunction2d::getWorldFdxdx)
+        .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
+        .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
+        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx);
 }

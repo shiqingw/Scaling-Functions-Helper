@@ -1,5 +1,5 @@
-#ifndef ELLIPSOID_3D_HPP
-#define ELLIPSOID_3D_HPP
+#ifndef ELLIPSOID_2D_HPP
+#define ELLIPSOID_2D_HPP
 
 #include <xtensor/xarray.hpp>
 #include <xtensor/xio.hpp>
@@ -7,28 +7,28 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xadapt.hpp>
 
-#include "scalingFunction3d.hpp"
+#include "scalingFunction2d.hpp"
 
 
-class Ellipsoid3d : public ScalingFunction3d {
+class Ellipsoid2d : public ScalingFunction2d {
     public:
-        xt::xarray<double> Q; // Symmetric quadratic coefficient, shape: (3, 3)
-        xt::xarray<double> mu; // Center of the ellipsoid, shape: (3,)
+        xt::xarray<double> Q; // Symmetric quadratic coefficient, shape: (2, 2)
+        xt::xarray<double> mu; // Center of the ellipsoid, shape: (2,)
 
-        Ellipsoid3d(bool isMoving_, const xt::xarray<double>& Q_, const xt::xarray<double>& mu_) 
-        : ScalingFunction3d(isMoving_), Q(Q_), mu(mu_) {
+        Ellipsoid2d(bool isMoving_, const xt::xarray<double>& Q_, const xt::xarray<double>& mu_) 
+        : ScalingFunction2d(isMoving_), Q(Q_), mu(mu_) {
             // if Q_ is not symmetric, return an error
             if (!xt::isclose(Q_, xt::transpose(Q_, {1, 0}))()){
                 throw std::invalid_argument("Q must be symmetric.");
             }
-            if (Q_.shape()[0] != 3 || Q_.shape()[1] != 3){
-                throw std::invalid_argument("Q must be of shape (3,3).");
+            if (Q_.shape()[0] != 2 || Q_.shape()[1] != 2){
+                throw std::invalid_argument("Q must be of shape (2,2).");
             }
-            if (mu_.shape()[0] != 3){
-                throw std::invalid_argument("mu must be of shape (3,).");
+            if (mu_.shape()[0] != 2){
+                throw std::invalid_argument("mu must be of shape (2,).");
             }
         };
-        ~Ellipsoid3d() = default;
+        ~Ellipsoid2d() = default;
 
         /**
          * @brief Calculate the scaling function F(P) = (P-mu)^T Q (P-mu).
@@ -64,4 +64,4 @@ class Ellipsoid3d : public ScalingFunction3d {
 }; 
 
 
-#endif // ELLIPSOID_3D_HPP
+#endif // ELLIPSOID_2D_HPP
