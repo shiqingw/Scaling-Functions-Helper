@@ -12,9 +12,14 @@ find_package(xtensor-python REQUIRED)
 pybind11_add_module(
     diffOptHelper2
     src/pybind.cpp
+    src/rimonMethod.cpp
     src/diffOptHelper.cpp
     src/smoothMinimum.cpp
     src/scalingFunction3d.cpp
+    src/ellipsoid3d.cpp
+    src/logSumExp3d.cpp
+    src/hyperplane3d.cpp
+    src/superquadrics3d.cpp
 )
 
 # If OpenBLAS provides a target, use it directly. If not, specify the library path as you did.
