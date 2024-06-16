@@ -109,6 +109,17 @@ class ScalingFunction3d {
         xt::xarray<double> getBodyPdpdxdx() const;
 
         /**
+         * @brief Calculate the scaling function F(p) = F[R(q).T (p - d)].
+         * 
+         * @param p Position in the world frame, shape: (dim_p,)
+         * @param d Origin of the body frame in the world frame, shape: (dim_p,)
+         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @return double F(p) = F[R(q).T (p - d)]
+         */
+        double getWorldF(const xt::xarray<double>& p, const xt::xarray<double>& d,
+                                        const xt::xarray<double>& q) const;
+
+        /**
          * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get dF/dp.
          * 
          * @param p Position in the world frame, shape: (dim_p,)

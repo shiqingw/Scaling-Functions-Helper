@@ -61,6 +61,23 @@ class Ellipsoid2d : public ScalingFunction2d {
          * @return xt::xarray<double> d^3F/dPdPdP, shape: (dim_p, dim_p, dim_p)
          */
         xt::xarray<double> getBodyFdPdPdP(const xt::xarray<double>& P) const override;
+
+         /**
+         * @brief Get the quadratic coefficient Q' = R Q R^T in the world frame.
+         * 
+         * @param theta Rotation angle representing R(theta)
+         * @return xt::xarray<double> Q', shape: (dim_p, dim_p)
+         */
+        xt::xarray<double> getWorldQuadraticCoefficient(double theta) const;
+
+        /**
+         * @brief Get the center of the ellipsoid mu' = d + R mu in the world frame.
+         * 
+         * @param d Origin of the body frame in the world frame, shape: (dim_p,)
+         * @param theta Rotation angle representing R(theta)
+         * @return xt::xarray<double> mu', shape: (dim_p,)
+         */
+        xt::xarray<double> getWorldCenter(const xt::xarray<double>& d, double theta) const;
 }; 
 
 

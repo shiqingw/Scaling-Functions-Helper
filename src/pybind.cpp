@@ -24,10 +24,16 @@ PYBIND11_MODULE(diffOptHelper2, m) {
     m.doc() = "diffOptHelper2";
 
     m.def("rimonMethod", &rimonMethod, "rimonMethod based on xtensor.");
+    m.def("rimonMethod2d", &rimonMethod2d, "rimonMethod2d based on xtensor.");
+    m.def("rimonMethod3d", &rimonMethod3d, "rimonMethod3d based on xtensor.");
 
     m.def("getDualVariable", &getDualVariable, "getDualVariable based on xtensor.");
     m.def("getGradientGeneral", &getGradientGeneral, "getGradientGeneral based on xtensor.");
     m.def("getGradientAndHessianGeneral", &getGradientAndHessianGeneral, "getGradientAndHessianGeneral based on xtensor.");
+    m.def("getGradient2d", &getGradient2d, "getGradient2d based on xtensor.");
+    m.def("getGradient3d", &getGradient3d, "getGradient3d based on xtensor.");
+    m.def("getGradientAndHessian2d", &getGradientAndHessian2d, "getGradientAndHessian2d based on xtensor.");
+    m.def("getGradientAndHessian3d", &getGradientAndHessian3d, "getGradientAndHessian3d based on xtensor.");
 
     m.def("getSmoothMinimumAndLocalGradientAndHessian", &getSmoothMinimumAndLocalGradientAndHessian, "getSmoothMinimumLocalDerivatives based on xtensor");
     m.def("getSmoothMinimumAndTotalGradientAndHessian", &getSmoothMinimumAndTotalGradientAndHessian, "getSmoothMinimumGradientAndHessian based on xtensor");
@@ -40,6 +46,8 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyFdP", &Ellipsoid3d::getBodyFdP)
         .def("getBodyFdPdP", &Ellipsoid3d::getBodyFdPdP)
         .def("getBodyFdPdPdP", &Ellipsoid3d::getBodyFdPdPdP)
+        .def("getWorldQuadraticCoefficient", &Ellipsoid3d::getWorldQuadraticCoefficient)
+        .def("getWorldCenter", &Ellipsoid3d::getWorldCenter)
         .def_readwrite("isMoving", &ScalingFunction3d::isMoving)
         .def("getRotationMatrix", &ScalingFunction3d::getRotationMatrix)
         .def("getBodyP", &ScalingFunction3d::getBodyP)
@@ -48,6 +56,7 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyPdpdx", &ScalingFunction3d::getBodyPdpdx)
         .def("getBodyPdxdx", &ScalingFunction3d::getBodyPdxdx)
         .def("getBodyPdpdxdx", &ScalingFunction3d::getBodyPdpdxdx)
+        .def("getWorldF", &ScalingFunction3d::getWorldF)
         .def("getWorldFdp", &ScalingFunction3d::getWorldFdp)
         .def("getWorldFdx", &ScalingFunction3d::getWorldFdx)
         .def("getWorldFdpdp", &ScalingFunction3d::getWorldFdpdp)
@@ -71,6 +80,7 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyPdpdx", &ScalingFunction3d::getBodyPdpdx)
         .def("getBodyPdxdx", &ScalingFunction3d::getBodyPdxdx)
         .def("getBodyPdpdxdx", &ScalingFunction3d::getBodyPdpdxdx)
+        .def("getWorldF", &ScalingFunction3d::getWorldF)
         .def("getWorldFdp", &ScalingFunction3d::getWorldFdp)
         .def("getWorldFdx", &ScalingFunction3d::getWorldFdx)
         .def("getWorldFdpdp", &ScalingFunction3d::getWorldFdpdp)
@@ -94,6 +104,7 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyPdpdx", &ScalingFunction3d::getBodyPdpdx)
         .def("getBodyPdxdx", &ScalingFunction3d::getBodyPdxdx)
         .def("getBodyPdpdxdx", &ScalingFunction3d::getBodyPdpdxdx)
+        .def("getWorldF", &ScalingFunction3d::getWorldF)
         .def("getWorldFdp", &ScalingFunction3d::getWorldFdp)
         .def("getWorldFdx", &ScalingFunction3d::getWorldFdx)
         .def("getWorldFdpdp", &ScalingFunction3d::getWorldFdpdp)
@@ -117,6 +128,7 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyPdpdx", &ScalingFunction3d::getBodyPdpdx)
         .def("getBodyPdxdx", &ScalingFunction3d::getBodyPdxdx)
         .def("getBodyPdpdxdx", &ScalingFunction3d::getBodyPdpdxdx)
+        .def("getWorldF", &ScalingFunction3d::getWorldF)
         .def("getWorldFdp", &ScalingFunction3d::getWorldFdp)
         .def("getWorldFdx", &ScalingFunction3d::getWorldFdx)
         .def("getWorldFdpdp", &ScalingFunction3d::getWorldFdpdp)
@@ -134,6 +146,8 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyFdP", &Ellipsoid2d::getBodyFdP)
         .def("getBodyFdPdP", &Ellipsoid2d::getBodyFdPdP)
         .def("getBodyFdPdPdP", &Ellipsoid2d::getBodyFdPdPdP)
+        .def("getWorldQuadraticCoefficient", &Ellipsoid2d::getWorldQuadraticCoefficient)
+        .def("getWorldCenter", &Ellipsoid2d::getWorldCenter)
         .def_readwrite("isMoving", &ScalingFunction2d::isMoving)
         .def("getRotationMatrix", &ScalingFunction2d::getRotationMatrix)
         .def("getBodyP", &ScalingFunction2d::getBodyP)
@@ -142,6 +156,7 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyPdpdx", &ScalingFunction2d::getBodyPdpdx)
         .def("getBodyPdxdx", &ScalingFunction2d::getBodyPdxdx)
         .def("getBodyPdpdxdx", &ScalingFunction2d::getBodyPdpdxdx)
+        .def("getWorldF", &ScalingFunction2d::getWorldF)
         .def("getWorldFdp", &ScalingFunction2d::getWorldFdp)
         .def("getWorldFdx", &ScalingFunction2d::getWorldFdx)
         .def("getWorldFdpdp", &ScalingFunction2d::getWorldFdpdp)
@@ -166,6 +181,7 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyPdpdx", &ScalingFunction2d::getBodyPdpdx)
         .def("getBodyPdxdx", &ScalingFunction2d::getBodyPdxdx)
         .def("getBodyPdpdxdx", &ScalingFunction2d::getBodyPdpdxdx)
+        .def("getWorldF", &ScalingFunction2d::getWorldF)
         .def("getWorldFdp", &ScalingFunction2d::getWorldFdp)
         .def("getWorldFdx", &ScalingFunction2d::getWorldFdx)
         .def("getWorldFdpdp", &ScalingFunction2d::getWorldFdpdp)
@@ -189,6 +205,7 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getBodyPdpdx", &ScalingFunction2d::getBodyPdpdx)
         .def("getBodyPdxdx", &ScalingFunction2d::getBodyPdxdx)
         .def("getBodyPdpdxdx", &ScalingFunction2d::getBodyPdpdxdx)
+        .def("getWorldF", &ScalingFunction2d::getWorldF)
         .def("getWorldFdp", &ScalingFunction2d::getWorldFdp)
         .def("getWorldFdx", &ScalingFunction2d::getWorldFdx)
         .def("getWorldFdpdp", &ScalingFunction2d::getWorldFdpdp)

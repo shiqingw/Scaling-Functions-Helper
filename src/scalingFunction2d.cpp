@@ -80,6 +80,13 @@ xt::xarray<double> ScalingFunction2d::getBodyPdpdxdx(double theta) const{
     return P_dpdxdx;
 }
 
+double ScalingFunction2d::getWorldF(const xt::xarray<double>& p, const xt::xarray<double>& d,
+                                        double theta) const{
+    
+    xt::xarray<double> P = getBodyP(p, d, theta); // shape (dim_p, )
+    return getBodyF(P);
+}
+
 xt::xarray<double> ScalingFunction2d::getWorldFdp(const xt::xarray<double>& p, const xt::xarray<double>& d,
                                         double theta) const{
     
@@ -94,9 +101,9 @@ xt::xarray<double> ScalingFunction2d::getWorldFdp(const xt::xarray<double>& p, c
 
 xt::xarray<double> ScalingFunction2d::getWorldFdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
                                         double theta) const{
-    
+
     if (isMoving == false){
-        return xt::zeros<double>({7});
+        return xt::zeros<double>({3});
     }
 
     xt::xarray<double> P = getBodyP(p, d, theta); // shape (dim_p, )
@@ -124,7 +131,7 @@ xt::xarray<double> ScalingFunction2d::getWorldFdpdx(const xt::xarray<double>& p,
                                         double theta) const{
     
     if (isMoving == false){
-        return xt::zeros<double>({3,7});
+        return xt::zeros<double>({2,3});
     }
 
     xt::xarray<double> P = getBodyP(p, d, theta); // shape (dim_p, )
@@ -145,7 +152,7 @@ xt::xarray<double> ScalingFunction2d::getWorldFdxdx(const xt::xarray<double>& p,
                                         double theta) const{
     
     if (isMoving == false){
-        return xt::zeros<double>({7,7});
+        return xt::zeros<double>({3,3});
     }
 
     xt::xarray<double> P = getBodyP(p, d, theta); // shape (dim_p, )
@@ -182,7 +189,7 @@ xt::xarray<double> ScalingFunction2d::getWorldFdpdpdx(const xt::xarray<double>& 
                                         double theta) const{
     
     if (isMoving == false){
-        return xt::zeros<double>({3,3,7});
+        return xt::zeros<double>({2,2,3});
     }
 
     xt::xarray<double> P = getBodyP(p, d, theta); // shape (dim_p, )
@@ -211,7 +218,7 @@ xt::xarray<double> ScalingFunction2d::getWorldFdpdxdx(const xt::xarray<double>& 
                                         double theta) const{
     
     if (isMoving == false){
-        return xt::zeros<double>({3,7,7});
+        return xt::zeros<double>({2,3,3});
     }
     xt::xarray<double> P = getBodyP(p, d, theta); // shape (dim_p, )
     xt::xarray<double> P_dp = getBodyPdp(theta); // shape (dim_p, dim_p)

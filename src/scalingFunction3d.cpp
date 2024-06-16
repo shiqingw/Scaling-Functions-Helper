@@ -241,6 +241,13 @@ xt::xarray<double> ScalingFunction3d::getBodyPdpdxdx() const{
     return P_dpdxdx;
 }
 
+double ScalingFunction3d::getWorldF(const xt::xarray<double>& p, const xt::xarray<double>& d,
+                                        const xt::xarray<double>& q) const{
+    
+    xt::xarray<double> P = getBodyP(p, d, q); // shape (dim_p,)
+    return getBodyF(P);
+}
+
 xt::xarray<double> ScalingFunction3d::getWorldFdp(const xt::xarray<double>& p, const xt::xarray<double>& d,
                                         const xt::xarray<double>& q) const{
     

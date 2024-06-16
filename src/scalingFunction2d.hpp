@@ -110,6 +110,17 @@ class ScalingFunction2d {
         xt::xarray<double> getBodyPdpdxdx(double theta) const;
 
         /**
+         * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)].
+         * 
+         * @param p Position in the world frame, shape: (dim_p,)
+         * @param d Origin of the body frame in the world frame, shape: (dim_p,)
+         * @param theta Rotation angle representing R(theta)
+         * @return double F(p) = F(P) = F[R(theta).T (p - d)]
+         */
+        double getWorldF(const xt::xarray<double>& p, const xt::xarray<double>& d,
+                                        double theta) const;
+
+        /**
          * @brief In the world frame, F(p) = F(P) = F[R(theta).T (p - d)]. x=[d,theta]. Get dF/dp.
          * 
          * @param p Position in the world frame, shape: (dim_p,)
