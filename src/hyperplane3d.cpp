@@ -1,7 +1,7 @@
 #include "hyperplane3d.hpp"
 
 double Hyperplane3d::getBodyF(const xt::xarray<double>& P) const{
-    return xt::linalg::vdot(a, P) + b;
+    return xt::linalg::vdot(a, P) + b + 1;
 }
 
 xt::xarray<double> Hyperplane3d::getBodyFdP(const xt::xarray<double>& P) const{
