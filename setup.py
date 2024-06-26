@@ -126,12 +126,12 @@ class CMakeBuild(build_ext):
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
-    name="diffOptHelper2",
+    name="scalingFunctionsHelper",
     version="0.0.1",
     author="Shiqing Wei",
     description="A project using pybind11 and CMake for differentiable optimization.",
     long_description="",
-    ext_modules=[CMakeExtension("diffOptHelper2")],
+    ext_modules=[CMakeExtension("scalingFunctionsHelper")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     extras_require={"test": ["pytest>=6.0"]},

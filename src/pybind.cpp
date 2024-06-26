@@ -19,9 +19,9 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(diffOptHelper2, m) {
+PYBIND11_MODULE(scalingFunctionsHelper, m) {
     xt::import_numpy();
-    m.doc() = "diffOptHelper2";
+    m.doc() = "scalingFunctionsHelper";
 
     m.def("rimonMethod", &rimonMethod, "rimonMethod based on xtensor.");
     m.def("rimonMethod2d", &rimonMethod2d, "rimonMethod2d based on xtensor.");
@@ -64,7 +64,18 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdxdx", &ScalingFunction3d::getWorldFdxdx)
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
-        .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx);
+        .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx)
+        .def(py::pickle(
+            [](const Ellipsoid3d &e) { // __getstate__
+                return py::make_tuple(e.isMoving, e.Q, e.mu);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 3) {
+                    throw std::runtime_error("Invalid state!");
+                }
+                return Ellipsoid3d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>());
+            }
+        ));
 
     py::class_<LogSumExp3d, ScalingFunction3d>(m, "LogSumExp3d")
         .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&, double>())
@@ -88,7 +99,18 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdxdx", &ScalingFunction3d::getWorldFdxdx)
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
-        .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx);
+        .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx)
+        .def(py::pickle(
+            [](const LogSumExp3d &l) { // __getstate__
+                return py::make_tuple(l.isMoving, l.A, l.b, l.kappa);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 4) {
+                    throw std::runtime_error("Invalid state!");
+                }
+                return LogSumExp3d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), t[3].cast<double>());
+            }
+        ));
     
     py::class_<Hyperplane3d, ScalingFunction3d>(m, "Hyperplane3d")
         .def(py::init<bool, const xt::xarray<double>&, double>())
@@ -112,7 +134,18 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdxdx", &ScalingFunction3d::getWorldFdxdx)
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
-        .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx);
+        .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx)
+        .def(py::pickle(
+            [](const Hyperplane3d &h) { // __getstate__
+                return py::make_tuple(h.isMoving, h.a, h.b);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 3) {
+                    throw std::runtime_error("Invalid state!");
+                }
+                return Hyperplane3d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<double>());
+            }
+        ));
 
     py::class_<Superquadrics3d, ScalingFunction3d>(m, "Superquadrics3d")
         .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&, double, double>())
@@ -136,7 +169,19 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdxdx", &ScalingFunction3d::getWorldFdxdx)
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
-        .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx);
+        .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx)
+        .def(py::pickle(
+            [](const Superquadrics3d &s) { // __getstate__
+                return py::make_tuple(s.isMoving, s.c, s.a, s.e1, s.e2);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 5) {
+                    throw std::runtime_error("Invalid state!");
+                }
+                return Superquadrics3d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), 
+                        t[3].cast<double>(), t[4].cast<double>());
+            }
+        ));
 
     py::class_<ScalingFunction2d>(m, "ScalingFunction2d");
 
@@ -164,7 +209,18 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdxdx", &ScalingFunction2d::getWorldFdxdx)
         .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
-        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx);
+        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx)
+        .def(py::pickle(
+            [](const Ellipsoid2d &e) { // __getstate__
+                return py::make_tuple(e.isMoving, e.Q, e.mu);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 3) {
+                    throw std::runtime_error("Invalid state!");
+                }
+                return Ellipsoid2d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>());
+            }
+        ));
 
 
     py::class_<LogSumExp2d, ScalingFunction2d>(m, "LogSumExp2d")
@@ -189,7 +245,18 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdxdx", &ScalingFunction2d::getWorldFdxdx)
         .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
-        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx);
+        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx)
+        .def(py::pickle(
+            [](const LogSumExp2d &l) { // __getstate__
+                return py::make_tuple(l.isMoving, l.A, l.b, l.kappa);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 4) {
+                    throw std::runtime_error("Invalid state!");
+                }
+                return LogSumExp2d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), t[3].cast<double>());
+            }
+        ));
     
     py::class_<Hyperplane2d, ScalingFunction2d>(m, "Hyperplane2d")
         .def(py::init<bool, const xt::xarray<double>&, double>())
@@ -213,5 +280,16 @@ PYBIND11_MODULE(diffOptHelper2, m) {
         .def("getWorldFdxdx", &ScalingFunction2d::getWorldFdxdx)
         .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
-        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx);
+        .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx)
+        .def(py::pickle(
+            [](const Hyperplane2d &h) { // __getstate__
+                return py::make_tuple(h.isMoving, h.a, h.b);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 3) {
+                    throw std::runtime_error("Invalid state!");
+                }
+                return Hyperplane2d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<double>());
+            }
+        ));
 }

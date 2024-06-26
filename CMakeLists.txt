@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18..3.20)
 
-project(diffOptHelper2)
+project(scalingFunctionsHelper)
 
 find_package(OpenBLAS REQUIRED)
 find_package(Python REQUIRED COMPONENTS Interpreter Development NumPy)
@@ -10,7 +10,7 @@ find_package(xtensor-blas REQUIRED)
 find_package(xtensor-python REQUIRED)
 
 pybind11_add_module(
-    diffOptHelper2
+    scalingFunctionsHelper
     src/pybind.cpp
     src/rimonMethod.cpp
     src/diffOptHelper.cpp
@@ -27,7 +27,7 @@ pybind11_add_module(
 )
 
 # If OpenBLAS provides a target, use it directly. If not, specify the library path as you did.
-target_link_libraries(diffOptHelper2 PUBLIC
+target_link_libraries(scalingFunctionsHelper PUBLIC
     pybind11::module
     xtensor-python
     Python::NumPy
@@ -37,8 +37,8 @@ target_link_libraries(diffOptHelper2 PUBLIC
     dl
 )
 
-target_include_directories(diffOptHelper2 PUBLIC
+target_include_directories(scalingFunctionsHelper PUBLIC
     ${OpenBLAS_INCLUDE_DIRS}  # Include this if find_package sets this variable
 )
 
-target_compile_definitions(diffOptHelper2 PRIVATE VERSION_INFO=0.1.0)
+target_compile_definitions(scalingFunctionsHelper PRIVATE VERSION_INFO=0.1.0)
