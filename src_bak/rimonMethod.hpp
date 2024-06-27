@@ -2,7 +2,6 @@
 #define RIMON_METHOD_HPP
 
 #include <cmath>
-#include <memory>
 #include <xtensor/xarray.hpp>
 #include <xtensor/xio.hpp>
 #include <xtensor/xview.hpp>
@@ -35,8 +34,8 @@ xt::xarray<double> rimonMethod(const xt::xarray<double>& A, const xt::xarray<dou
  * @param theta2 Rotation angle representing R(theta2)
  * @return xt::xarray<double> p_rimon, shape=(dim_p,)
  */
-xt::xarray<double> rimonMethod2d(std::shared_ptr<Ellipsoid2d> SF1, const xt::xarray<double>& d1, double theta1,
-    std::shared_ptr<Ellipsoid2d> SF2, const xt::xarray<double>& d2, double theta2);
+xt::xarray<double> rimonMethod2d(const Ellipsoid2d& SF1, const xt::xarray<double>& d1, double theta1,
+    const Ellipsoid2d& SF2, const xt::xarray<double>& d2, double theta2);
 
 /**
  * @brief Apply the Rimon method to two 3D ellipsoids.
@@ -49,7 +48,7 @@ xt::xarray<double> rimonMethod2d(std::shared_ptr<Ellipsoid2d> SF1, const xt::xar
  * @param q2 Quaternion representing the rotation R(q2)
  * @return xt::xarray<double> p_rimon, shape=(dim_p,)
  */
-xt::xarray<double> rimonMethod3d(std::shared_ptr<Ellipsoid3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
-    std::shared_ptr<Ellipsoid3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
+xt::xarray<double> rimonMethod3d(const Ellipsoid3d& SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
+    const Ellipsoid3d& SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
 
 #endif // RIMON_METHOD_HPP

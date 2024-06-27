@@ -46,6 +46,14 @@
         "__debug": "cpp",
         "atomic": "cpp",
         "exception": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "__hash_table": "cpp",
+        "__node_handle": "cpp",
+        "__tree": "cpp",
+        "charconv": "cpp",
+        "iomanip": "cpp",
+        "map": "cpp",
+        "optional": "cpp",
+        "unordered_map": "cpp"
     }
 }

@@ -1,6 +1,6 @@
 import sympy as sp
 import numpy as np
-import diffOptHelper2 as doh
+import scalingFunctionsHelper as doh
 from scipy.spatial.transform import Rotation
 
 qx, qy, qz, qw = sp.symbols('qx qy qz qw', real=True)

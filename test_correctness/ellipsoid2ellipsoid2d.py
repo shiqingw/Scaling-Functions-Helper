@@ -1,7 +1,7 @@
 import sympy as sp
 import numpy as np
 import diffOptHelper as doh1
-import diffOptHelper2 as doh2
+import scalingFunctionsHelper as doh2
 from scipy.spatial.transform import Rotation
 
 Q1 = np.random.rand(2)**2 + 1

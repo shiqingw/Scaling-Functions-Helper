@@ -7,7 +7,6 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xadapt.hpp>
 #include <tuple>
-#include <memory>
 
 #include "scalingFunction2d.hpp"
 #include "scalingFunction3d.hpp"
@@ -84,8 +83,8 @@ std::tuple<xt::xarray<double>,xt::xarray<double>> getGradientAndHessianGeneral(d
  * @return std::tuple<double, xt::xarray<double>> [alpha^*(x) is a double, dalpha^*(x)/dx of shape (dim_x,)]
  */
 std::tuple<double, xt::xarray<double>> getGradient2d(
-    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
-    std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2);
+    const xt::xarray<double>& p, const ScalingFunction2d& SF1, const xt::xarray<double>& d1, double theta1,
+    const ScalingFunction2d& SF2, const xt::xarray<double>& d2, double theta2);
 
 /**
  * @brief Get the gradient and Hessian of alpha^*(x) wrt x in 2D.
@@ -101,8 +100,8 @@ std::tuple<double, xt::xarray<double>> getGradient2d(
  * d^2alpha^*(x)/dx^2 of shape (dim_x, dim_x)]
  */
 std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian2d(
-    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
-    std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2);
+    const xt::xarray<double>& p, const ScalingFunction2d& SF1, const xt::xarray<double>& d1, double theta1,
+    const ScalingFunction2d& SF2, const xt::xarray<double>& d2, double theta2);
 
 /**
  * @brief Get the gradient of alpha^*(x) wrt x in 3D.
@@ -117,8 +116,8 @@ std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian
  * @return std::tuple<double, xt::xarray<double>> [alpha^*(x) is a double, dalpha^*(x)/dx of shape (dim_x,)]
  */
 std::tuple<double, xt::xarray<double>> getGradient3d(
-    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
-    std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
+    const xt::xarray<double>& p, const ScalingFunction3d& SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
+    const ScalingFunction3d& SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
 
 /**
  * @brief Get the gradient and Hessian of alpha^*(x) wrt x in 3D.
@@ -134,6 +133,6 @@ std::tuple<double, xt::xarray<double>> getGradient3d(
  * d^2alpha^*(x)/dx^2 of shape (dim_x, dim_x)]
  */
 std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian3d(
-    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
-    std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
+    const xt::xarray<double>& p, const ScalingFunction3d& SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
+    const ScalingFunction3d& SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
 #endif //DIFF_OPT_HELPER_HPP

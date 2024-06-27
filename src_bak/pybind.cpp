@@ -1,7 +1,5 @@
 #include <numeric>
-#include <memory> 
 #include <xtensor.hpp>
-#include <pybind11/stl.h>
 #include <pybind11/pybind11.h>
 #define FORCE_IMPORT_ARRAY
 #include <xtensor-python/pyarray.hpp>
@@ -40,12 +38,10 @@ PYBIND11_MODULE(scalingFunctionsHelper, m) {
     m.def("getSmoothMinimumAndLocalGradientAndHessian", &getSmoothMinimumAndLocalGradientAndHessian, "getSmoothMinimumLocalDerivatives based on xtensor");
     m.def("getSmoothMinimumAndTotalGradientAndHessian", &getSmoothMinimumAndTotalGradientAndHessian, "getSmoothMinimumGradientAndHessian based on xtensor");
 
-    py::class_<ScalingFunction3d, std::shared_ptr<ScalingFunction3d>>(m, "ScalingFunction3d");
+    py::class_<ScalingFunction3d>(m, "ScalingFunction3d");
 
-    py::class_<Ellipsoid3d, ScalingFunction3d, std::shared_ptr<Ellipsoid3d>>(m, "Ellipsoid3d")
+    py::class_<Ellipsoid3d, ScalingFunction3d>(m, "Ellipsoid3d")
         .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&>())
-        .def_readwrite("Q", &Ellipsoid3d::Q)
-        .def_readwrite("mu", &Ellipsoid3d::mu)
         .def("getBodyF", &Ellipsoid3d::getBodyF)
         .def("getBodyFdP", &Ellipsoid3d::getBodyFdP)
         .def("getBodyFdPdP", &Ellipsoid3d::getBodyFdPdP)
@@ -77,15 +73,12 @@ PYBIND11_MODULE(scalingFunctionsHelper, m) {
                 if (t.size() != 3) {
                     throw std::runtime_error("Invalid state!");
                 }
-                return std::make_shared<Ellipsoid3d>(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>());
+                return Ellipsoid3d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>());
             }
         ));
 
-    py::class_<LogSumExp3d, ScalingFunction3d, std::shared_ptr<LogSumExp3d>>(m, "LogSumExp3d")
+    py::class_<LogSumExp3d, ScalingFunction3d>(m, "LogSumExp3d")
         .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&, double>())
-        .def_readwrite("A", &LogSumExp3d::A)
-        .def_readwrite("b", &LogSumExp3d::b)
-        .def_readwrite("kappa", &LogSumExp3d::kappa)
         .def("getBodyF", &LogSumExp3d::getBodyF)
         .def("getBodyFdP", &LogSumExp3d::getBodyFdP)
         .def("getBodyFdPdP", &LogSumExp3d::getBodyFdPdP)
@@ -115,14 +108,12 @@ PYBIND11_MODULE(scalingFunctionsHelper, m) {
                 if (t.size() != 4) {
                     throw std::runtime_error("Invalid state!");
                 }
-                return std::make_shared<LogSumExp3d>(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), t[3].cast<double>());
+                return LogSumExp3d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), t[3].cast<double>());
             }
         ));
     
-    py::class_<Hyperplane3d, ScalingFunction3d, std::shared_ptr<Hyperplane3d>>(m, "Hyperplane3d")
+    py::class_<Hyperplane3d, ScalingFunction3d>(m, "Hyperplane3d")
         .def(py::init<bool, const xt::xarray<double>&, double>())
-        .def_readwrite("a", &Hyperplane3d::a)
-        .def_readwrite("b", &Hyperplane3d::b)
         .def("getBodyF", &Hyperplane3d::getBodyF)
         .def("getBodyFdP", &Hyperplane3d::getBodyFdP)
         .def("getBodyFdPdP", &Hyperplane3d::getBodyFdPdP)
@@ -152,16 +143,12 @@ PYBIND11_MODULE(scalingFunctionsHelper, m) {
                 if (t.size() != 3) {
                     throw std::runtime_error("Invalid state!");
                 }
-                return std::make_shared<Hyperplane3d>(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<double>());
+                return Hyperplane3d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<double>());
             }
         ));
 
-    py::class_<Superquadrics3d, ScalingFunction3d, std::shared_ptr<Superquadrics3d>>(m, "Superquadrics3d")
+    py::class_<Superquadrics3d, ScalingFunction3d>(m, "Superquadrics3d")
         .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&, double, double>())
-        .def_readwrite("c", &Superquadrics3d::c)
-        .def_readwrite("a", &Superquadrics3d::a)
-        .def_readwrite("e1", &Superquadrics3d::e1)
-        .def_readwrite("e2", &Superquadrics3d::e2)
         .def("getBodyF", &Superquadrics3d::getBodyF)
         .def("getBodyFdP", &Superquadrics3d::getBodyFdP)
         .def("getBodyFdPdP", &Superquadrics3d::getBodyFdPdP)
@@ -191,17 +178,15 @@ PYBIND11_MODULE(scalingFunctionsHelper, m) {
                 if (t.size() != 5) {
                     throw std::runtime_error("Invalid state!");
                 }
-                return std::make_shared<Superquadrics3d>(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), 
+                return Superquadrics3d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), 
                         t[3].cast<double>(), t[4].cast<double>());
             }
         ));
 
-    py::class_<ScalingFunction2d, std::shared_ptr<ScalingFunction2d>>(m, "ScalingFunction2d");
+    py::class_<ScalingFunction2d>(m, "ScalingFunction2d");
 
-    py::class_<Ellipsoid2d, ScalingFunction2d, std::shared_ptr<Ellipsoid2d>>(m, "Ellipsoid2d")
+    py::class_<Ellipsoid2d, ScalingFunction2d>(m, "Ellipsoid2d")
         .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&>())
-        .def_readwrite("Q", &Ellipsoid2d::Q)
-        .def_readwrite("mu", &Ellipsoid2d::mu)
         .def("getBodyF", &Ellipsoid2d::getBodyF)
         .def("getBodyFdP", &Ellipsoid2d::getBodyFdP)
         .def("getBodyFdPdP", &Ellipsoid2d::getBodyFdPdP)
@@ -233,16 +218,13 @@ PYBIND11_MODULE(scalingFunctionsHelper, m) {
                 if (t.size() != 3) {
                     throw std::runtime_error("Invalid state!");
                 }
-                return std::make_shared<Ellipsoid2d>(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>());
+                return Ellipsoid2d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>());
             }
         ));
 
 
-    py::class_<LogSumExp2d, ScalingFunction2d, std::shared_ptr<LogSumExp2d>>(m, "LogSumExp2d")
+    py::class_<LogSumExp2d, ScalingFunction2d>(m, "LogSumExp2d")
         .def(py::init<bool, const xt::xarray<double>&, const xt::xarray<double>&, double>())
-        .def_readwrite("A", &LogSumExp2d::A)
-        .def_readwrite("b", &LogSumExp2d::b)
-        .def_readwrite("kappa", &LogSumExp2d::kappa)
         .def("getBodyF", &LogSumExp2d::getBodyF)
         .def("getBodyFdP", &LogSumExp2d::getBodyFdP)
         .def("getBodyFdPdP", &LogSumExp2d::getBodyFdPdP)
@@ -272,14 +254,12 @@ PYBIND11_MODULE(scalingFunctionsHelper, m) {
                 if (t.size() != 4) {
                     throw std::runtime_error("Invalid state!");
                 }
-                return std::make_shared<LogSumExp2d>(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), t[3].cast<double>());
+                return LogSumExp2d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<xt::xarray<double>>(), t[3].cast<double>());
             }
         ));
     
-    py::class_<Hyperplane2d, ScalingFunction2d, std::shared_ptr<Hyperplane2d>>(m, "Hyperplane2d")
+    py::class_<Hyperplane2d, ScalingFunction2d>(m, "Hyperplane2d")
         .def(py::init<bool, const xt::xarray<double>&, double>())
-        .def_readwrite("a", &Hyperplane2d::a)
-        .def_readwrite("b", &Hyperplane2d::b)
         .def("getBodyF", &Hyperplane2d::getBodyF)
         .def("getBodyFdP", &Hyperplane2d::getBodyFdP)
         .def("getBodyFdPdP", &Hyperplane2d::getBodyFdPdP)
@@ -309,7 +289,7 @@ PYBIND11_MODULE(scalingFunctionsHelper, m) {
                 if (t.size() != 3) {
                     throw std::runtime_error("Invalid state!");
                 }
-                return std::make_shared<Hyperplane2d>(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<double>());
+                return Hyperplane2d(t[0].cast<bool>(), t[1].cast<xt::xarray<double>>(), t[2].cast<double>());
             }
         ));
 }
