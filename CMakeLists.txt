@@ -42,3 +42,22 @@ target_include_directories(scalingFunctionsHelper PUBLIC
 )
 
 target_compile_definitions(scalingFunctionsHelper PRIVATE VERSION_INFO=0.1.0)
+
+# Specify the installation paths
+install(TARGETS scalingFunctionsHelper
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+# Optionally, install headers
+install(FILES
+        src/scalingFunction3d.hpp
+        src/ellipsoid3d.hpp
+        src/logSumExp3d.hpp
+        src/hyperplane3d.hpp
+        src/superquadrics3d.hpp
+        src/scalingFunction2d.hpp
+        src/ellipsoid2d.hpp
+        src/logSumExp2d.hpp
+        src/hyperplane2d.hpp
+        DESTINATION include/scalingFunctionsHelper)
