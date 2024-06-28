@@ -14,7 +14,14 @@ class Ellipsoid2d : public ScalingFunction2d {
     public:
         xt::xarray<double> Q; // Symmetric quadratic coefficient, shape: (2, 2)
         xt::xarray<double> mu; // Center of the ellipsoid, shape: (2,)
-
+        
+        /**
+         * @brief Construct a new Ellipsoid2d object
+         * 
+         * @param isMoving_ True if the ellipsoid is moving, false otherwise
+         * @param Q_ Symmetric quadratic coefficient, shape: (2, 2)
+         * @param mu_ Center of the ellipsoid, shape: (2,)
+         */
         Ellipsoid2d(bool isMoving_, const xt::xarray<double>& Q_, const xt::xarray<double>& mu_) 
         : ScalingFunction2d(isMoving_), Q(Q_), mu(mu_) {
             // if Q_ is not symmetric, return an error

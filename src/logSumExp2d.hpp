@@ -9,13 +9,20 @@
 
 #include "scalingFunction2d.hpp"
 
-
 class LogSumExp2d : public ScalingFunction2d {
     public:
         xt::xarray<double> A; // Shape: (N, 2)
         xt::xarray<double> b; // Shape: (N,)
         double kappa; // positive scalar
 
+        /**
+         * @brief Construct a new LogSumExp2d object
+         * 
+         * @param isMoving_ True if the scaling function is moving, false otherwise
+         * @param A_ Matrix A in F(P) = log[sum(exp[k(A P + b)])/len(A)] + 1, shape: (N, 2)
+         * @param b_ Vector b in F(P) = log[sum(exp[k(A P + b)])/len(A)] + 1, shape: (N,)
+         * @param kappa_ Positive scalar k in F(P) = log[sum(exp[k(A P + b)])/len(A)] + 1
+         */
         LogSumExp2d(bool isMoving_, const xt::xarray<double>& A_, const xt::xarray<double>& b_,
                     double kappa_):ScalingFunction2d(isMoving_), A(A_), b(b_), kappa(kappa_) {
             if (A_.shape()[1] != 2){

@@ -15,6 +15,13 @@ class Ellipsoid3d : public ScalingFunction3d {
         xt::xarray<double> Q; // Symmetric quadratic coefficient, shape: (3, 3)
         xt::xarray<double> mu; // Center of the ellipsoid, shape: (3,)
 
+        /**
+         * @brief Construct a new Ellipsoid3d object.
+         * 
+         * @param isMoving_ Whether the scaling function is moving with the body frame
+         * @param Q_ Symmetric quadratic coefficient, shape: (3, 3)
+         * @param mu_ Center of the ellipsoid, shape: (3,)
+         */
         Ellipsoid3d(bool isMoving_, const xt::xarray<double>& Q_, const xt::xarray<double>& mu_) 
         : ScalingFunction3d(isMoving_), Q(Q_), mu(mu_) {
             // if Q_ is not symmetric, return an error

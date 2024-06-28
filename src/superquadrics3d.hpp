@@ -17,6 +17,15 @@ class Superquadrics3d : public ScalingFunction3d {
         xt::xarray<double> a; // positive scalars representing the semi-axes of the superquadrics
         double e1, e2; // positive scalars between 0 and 2
 
+        /**
+         * @brief Construct a new Superquadrics3d object
+         * 
+         * @param isMoving_ True if the scaling function is moving, false otherwise
+         * @param c_ Center of the superquadrics, shape: (3,)
+         * @param a_ Positive scalars representing the semi-axes of the superquadrics, shape: (3,)
+         * @param e1_ Positive scalar between 0 and 2
+         * @param e2_ Positive scalar between 0 and 2
+         */
         Superquadrics3d(bool isMoving_, const xt::xarray<double>& c_, const xt::xarray<double>& a_, double e1_, double e2_) : 
             ScalingFunction3d(isMoving_), c(c_), a(a_), e1(e1_), e2(e2_){
             if (c.shape()[0] != 3){

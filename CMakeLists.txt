@@ -61,3 +61,24 @@ install(FILES
         src/logSumExp2d.hpp
         src/hyperplane2d.hpp
         DESTINATION include/scalingFunctionsHelper)
+
+# Doxygen documentation
+find_package(Doxygen)
+
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.out)
+
+    add_custom_command(
+        OUTPUT ${DOXYGEN_OUT}
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_IN}
+        MAIN_DEPENDENCY ${DOXYGEN_IN}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+
+    add_custom_target(doc ALL DEPENDS ${DOXYGEN_OUT})
+
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
+            DESTINATION share/doc/scalingFunctionsHelper)
+endif()

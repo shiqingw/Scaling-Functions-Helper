@@ -15,6 +15,13 @@ class Hyperplane2d : public ScalingFunction2d {
         xt::xarray<double> a; // vector a in F(P) = a^T P + b, shape: (2,)
         double b; // scalar b in F(P) = a^T P + b
 
+        /**
+         * @brief Construct a new Hyperplane2d object
+         * 
+         * @param isMoving_ True if the scaling function is moving, false otherwise
+         * @param a_ Vector a in F(P) = a^T P + b, shape: (2,)
+         * @param b_ Scalar b in F(P) = a^T P + b
+         */
         Hyperplane2d(bool isMoving_, const xt::xarray<double>& a_, double b_) 
         : ScalingFunction2d(isMoving_), a(a_), b(b_) {
             if (a.shape()[0] != 2){

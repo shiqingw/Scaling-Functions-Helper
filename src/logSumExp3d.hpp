@@ -16,6 +16,14 @@ class LogSumExp3d : public ScalingFunction3d {
         xt::xarray<double> b; // Shape: (N,)
         double kappa; // positive scalar
 
+        /**
+         * @brief Construct a new LogSumExp3d object
+         * 
+         * @param isMoving_ True if the scaling function is moving, false otherwise
+         * @param A_ Matrix A in F(P) = log[sum(exp[k(A P + b)])/len(A)] + 1, shape: (N, 3)
+         * @param b_ Vector b in F(P) = log[sum(exp[k(A P + b)])/len(A)] + 1, shape: (N,)
+         * @param kappa_ Positive scalar k in F(P) = log[sum(exp[k(A P + b)])/len(A)] + 1
+         */
         LogSumExp3d(bool isMoving_, const xt::xarray<double>& A_, const xt::xarray<double>& b_,
                     double kappa_):ScalingFunction3d(isMoving_), A(A_), b(b_), kappa(kappa_) {
             if (A_.shape()[1] != 3){

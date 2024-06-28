@@ -11,6 +11,12 @@
 class ScalingFunction2d {
     public:
         bool isMoving = false;
+
+        /**
+         * @brief Construct a new ScalingFunction2d object
+         * 
+         * @param isMoving_ True if the scaling function is moving, false otherwise
+         */
         ScalingFunction2d(bool isMoving_) : isMoving(isMoving_) {};
         virtual ~ScalingFunction2d() = default;
 

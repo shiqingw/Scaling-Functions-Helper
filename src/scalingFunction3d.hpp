@@ -10,6 +10,12 @@
 class ScalingFunction3d {
     public:
         bool isMoving = false;
+
+        /**
+         * @brief Construct a new ScalingFunction3d object
+         * 
+         * @param isMoving_ True if the scaling function is moving, false otherwise
+         */
         ScalingFunction3d(bool isMoving_) : isMoving(isMoving_) {};
         virtual ~ScalingFunction3d() = default;
 
