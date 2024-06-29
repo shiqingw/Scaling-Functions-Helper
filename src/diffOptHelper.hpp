@@ -136,4 +136,5 @@ std::tuple<double, xt::xarray<double>> getGradient3d(
 std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian3d(
     const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
     std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
-#endif //DIFF_OPT_HELPER_HPP
+
+#endif

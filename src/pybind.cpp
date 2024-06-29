@@ -21,9 +21,9 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(scalingFunctionsHelper, m) {
+PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
     xt::import_numpy();
-    m.doc() = "scalingFunctionsHelper";
+    m.doc() = "scalingFunctionsHelperPy";
 
     m.def("rimonMethod", &rimonMethod, "rimonMethod based on xtensor.");
     m.def("rimonMethod2d", &rimonMethod2d, "rimonMethod2d based on xtensor.");

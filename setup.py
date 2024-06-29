@@ -45,6 +45,7 @@ class CMakeBuild(build_ext):
         # EXAMPLE_VERSION_INFO shows you how to pass a value into the C++ code
         # from Python.
         cmake_args = [
+            f"-DBUILD_PYTHON_MODULE=ON",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
@@ -126,12 +127,12 @@ class CMakeBuild(build_ext):
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
-    name="scalingFunctionsHelper",
-    version="0.0.1",
+    name="scalingFunctionsHelperPy",
+    version="0.1.0",
     author="Shiqing Wei",
     description="A project using pybind11 and CMake for differentiable optimization.",
     long_description="",
-    ext_modules=[CMakeExtension("scalingFunctionsHelper")],
+    ext_modules=[CMakeExtension("scalingFunctionsHelperPy")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     extras_require={"test": ["pytest>=6.0"]},
