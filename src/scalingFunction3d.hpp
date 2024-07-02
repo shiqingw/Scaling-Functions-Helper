@@ -212,6 +212,30 @@ class ScalingFunction3d {
          */
         xt::xarray<double> getWorldFdpdxdx(const xt::xarray<double>& p, const xt::xarray<double>& d,
                                         const xt::xarray<double>& q) const;
+
+        /**
+         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get dF/dp, dF/dx, d^2F/dpdp, d^2F/dpdx.
+         * 
+         * @param p Position in the world frame, shape: (dim_p,)
+         * @param d Origin of the body frame in the world frame, shape: (dim_p,)
+         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @return std::tuple<xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>> 
+         * in the order of dF/dp, dF/dx, d^2F/dpdp, d^2F/dpdx.
+         */
+        std::tuple<xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>>
+            getWorldFFirstToSecondDers(const xt::xarray<double>& p, const xt::xarray<double>& d, const xt::xarray<double>& q) const;
+
+        /**
+         * @brief In the world frame, F(p) = F(P) = F[R(q).T (p - d)]. x=[d,q]. Get dF/dp, dF/dx, d^2F/dpdp, d^2F/dpdx, d^2F/dxdx, d^3F/dpdpdp, d^3F/dpdpdx, d^3F/dpdxdx.
+         * 
+         * @param p Position in the world frame, shape: (dim_p,)
+         * @param d Origin of the body frame in the world frame, shape: (dim_p,)
+         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @return std::tuple<xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>>
+         * in the order of dF/dp, dF/dx, d^2F/dpdp, d^2F/dpdx, d^2F/dxdx, d^3F/dpdpdp, d^3F/dpdpdx, d^3F/dpdxdx.
+         */
+        std::tuple<xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>, xt::xarray<double>>
+            getWorldFFirstToThirdDers(const xt::xarray<double>& p, const xt::xarray<double>& d, const xt::xarray<double>& q) const;
         
 };
 

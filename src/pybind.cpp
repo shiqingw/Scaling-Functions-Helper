@@ -36,6 +36,10 @@ PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
     m.def("getGradient3d", &getGradient3d, "getGradient3d based on xtensor.");
     m.def("getGradientAndHessian2d", &getGradientAndHessian2d, "getGradientAndHessian2d based on xtensor.");
     m.def("getGradientAndHessian3d", &getGradientAndHessian3d, "getGradientAndHessian3d based on xtensor.");
+    m.def("getGradient2dOld", &getGradient2dOld, "getGradient2dOld based on xtensor.");
+    m.def("getGradient3dOld", &getGradient3dOld, "getGradient3dOld based on xtensor.");
+    m.def("getGradientAndHessian2dOld", &getGradientAndHessian2dOld, "getGradientAndHessian2dOld based on xtensor.");
+    m.def("getGradientAndHessian3dOld", &getGradientAndHessian3dOld, "getGradientAndHessian3dOld based on xtensor.");
 
     m.def("getSmoothMinimumAndLocalGradientAndHessian", &getSmoothMinimumAndLocalGradientAndHessian, "getSmoothMinimumLocalDerivatives based on xtensor");
     m.def("getSmoothMinimumAndTotalGradientAndHessian", &getSmoothMinimumAndTotalGradientAndHessian, "getSmoothMinimumGradientAndHessian based on xtensor");

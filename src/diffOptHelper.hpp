@@ -83,6 +83,72 @@ std::tuple<xt::xarray<double>,xt::xarray<double>> getGradientAndHessianGeneral(d
  * @param theta2 Rotation angle representing R(theta2)
  * @return std::tuple<double, xt::xarray<double>> [alpha^*(x) is a double, dalpha^*(x)/dx of shape (dim_x,)]
  */
+std::tuple<double, xt::xarray<double>> getGradient2dOld(
+    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
+    std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2);
+
+/**
+ * @brief Get the gradient and Hessian of alpha^*(x) wrt x in 2D.
+ * 
+ * @param p Optimal solution p*, shape: (dim_p,)
+ * @param SF1 Scaling function 1
+ * @param d1 Origin of the body frame of SF1 in the world frame, shape: (dim_p,)
+ * @param theta1 Rotation angle representing R(theta1)
+ * @param SF2 Scaling function 2
+ * @param d2 Origin of the body frame of SF2 in the world frame, shape: (dim_p,)
+ * @param theta2 Rotation angle representing R(theta2)
+ * @return std::tuple<double, xt::xarray<double>, xt::xarray<double>> [alpha^*(x) is a double, dalpha^*(x)/dx of shape (dim_x,), 
+ * d^2alpha^*(x)/dx^2 of shape (dim_x, dim_x)]
+ */
+std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian2dOld(
+    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
+    std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2);
+
+/**
+ * @brief Get the gradient of alpha^*(x) wrt x in 3D.
+ * 
+ * @param p Optimal solution p*, shape: (dim_p,)
+ * @param SF1 Scaling function 1
+ * @param d1 Origin of the body frame of SF1 in the world frame, shape: (dim_p,)
+ * @param q1 Quaternion representing the rotation R(q1)
+ * @param SF2 Scaling function 2
+ * @param d2 Origin of the body frame of SF2 in the world frame, shape: (dim_p,)
+ * @param q2 Quaternion representing the rotation R(q2)
+ * @return std::tuple<double, xt::xarray<double>> [alpha^*(x) is a double, dalpha^*(x)/dx of shape (dim_x,)]
+ */
+std::tuple<double, xt::xarray<double>> getGradient3dOld(
+    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
+    std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
+
+/**
+ * @brief Get the gradient and Hessian of alpha^*(x) wrt x in 3D.
+ * 
+ * @param p Optimal solution p*, shape: (dim_p,)
+ * @param SF1 Scaling function 1
+ * @param d1 Origin of the body frame of SF1 in the world frame, shape: (dim_p,)
+ * @param q1 Quaternion representing the rotation R(q1)
+ * @param SF2 Scaling function 2
+ * @param d2 Origin of the body frame of SF2 in the world frame, shape: (dim_p,)
+ * @param q2 Quaternion representing the rotation R(q2)
+ * @return std::tuple<double, xt::xarray<double>, xt::xarray<double>> [alpha^*(x) is a double, dalpha^*(x)/dx of shape (dim_x,), 
+ * d^2alpha^*(x)/dx^2 of shape (dim_x, dim_x)]
+ */
+std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian3dOld(
+    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
+    std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2);
+
+/**
+ * @brief Get the gradient of alpha^*(x) wrt x in 2D.
+ * 
+ * @param p Optimal solution p*, shape: (dim_p,)
+ * @param SF1 Scaling function 1
+ * @param d1 Origin of the body frame of SF1 in the world frame, shape: (dim_p,)
+ * @param theta1 Rotation angle representing R(theta1)
+ * @param SF2 Scaling function 2
+ * @param d2 Origin of the body frame of SF2 in the world frame, shape: (dim_p,)
+ * @param theta2 Rotation angle representing R(theta2)
+ * @return std::tuple<double, xt::xarray<double>> [alpha^*(x) is a double, dalpha^*(x)/dx of shape (dim_x,)]
+ */
 std::tuple<double, xt::xarray<double>> getGradient2d(
     const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
     std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2);

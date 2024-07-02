@@ -96,7 +96,7 @@ std::tuple<xt::xarray<double>,xt::xarray<double>> getGradientAndHessianGeneral(d
     return std::make_tuple(alpha_dx, alpha_dxdx);
 }
 
-std::tuple<double, xt::xarray<double>> getGradient2d(
+std::tuple<double, xt::xarray<double>> getGradient2dOld(
     const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
     std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2){
 
@@ -110,28 +110,22 @@ std::tuple<double, xt::xarray<double>> getGradient2d(
         xt::xarray<double> F1_dx1 = SF1->getWorldFdx(p, d1, theta1);
         xt::xarray<double> F1_dpdp = SF1->getWorldFdpdp(p, d1, theta1);
         xt::xarray<double> F1_dpdx1 = SF1->getWorldFdpdx(p, d1, theta1);
-        xt::xarray<double> F1_dx1dx1 = SF1->getWorldFdxdx(p, d1, theta1);
 
         xt::xarray<double> F1_dx = xt::zeros<double>({dim_x});
         xt::view(F1_dx, xt::range(0, dim_x1)) = F1_dx1;
         xt::xarray<double> F1_dpdx = xt::zeros<double>({dim_p, dim_x});
         xt::view(F1_dpdx, xt::all(), xt::range(0, dim_x1)) = F1_dpdx1;
-        xt::xarray<double> F1_dxdx = xt::zeros<double>({dim_x, dim_x});
-        xt::view(F1_dxdx, xt::range(0, dim_x1), xt::range(0, dim_x1)) = F1_dx1dx1;
 
         xt::xarray<double> F2_dp = SF2->getWorldFdp(p, d2, theta2);
         xt::xarray<double> F2_dx2 = SF2->getWorldFdx(p, d2, theta2);
         xt::xarray<double> F2_dpdp = SF2->getWorldFdpdp(p, d2, theta2);
         xt::xarray<double> F2_dpdx2 = SF2->getWorldFdpdx(p, d2, theta2);
-        xt::xarray<double> F2_dx2dx2 = SF2->getWorldFdxdx(p, d2, theta2);
 
         xt::xarray<double> F2_dx = xt::zeros<double>({dim_x});
         xt::view(F2_dx, xt::range(dim_x1, dim_x)) = F2_dx2;
         xt::xarray<double> F2_dpdx = xt::zeros<double>({dim_p, dim_x});
         xt::view(F2_dpdx, xt::all(), xt::range(dim_x1, dim_x)) = F2_dpdx2;
         xt::xarray<double> F2_dxdx = xt::zeros<double>({dim_x, dim_x});
-        xt::view(F2_dxdx, xt::range(dim_x1, dim_x), xt::range(dim_x1, dim_x)) = F2_dx2dx2;
-        xt::xarray<double> F2_dpdpdx = xt::zeros<double>({dim_p, dim_p, dim_x});
 
         double dual_var = getDualVariable(F1_dp, F2_dp);
         xt::xarray<double> alpha_dx = getGradientGeneral(dual_var, F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx);
@@ -146,13 +140,11 @@ std::tuple<double, xt::xarray<double>> getGradient2d(
         xt::xarray<double> F1_dx = SF1->getWorldFdx(p, d1, theta1);
         xt::xarray<double> F1_dpdp = SF1->getWorldFdpdp(p, d1, theta1);
         xt::xarray<double> F1_dpdx = SF1->getWorldFdpdx(p, d1, theta1);
-        xt::xarray<double> F1_dxdx = SF1->getWorldFdxdx(p, d1, theta1);
 
         xt::xarray<double> F2_dp = SF2->getWorldFdp(p, d2, theta2);
         xt::xarray<double> F2_dx = SF2->getWorldFdx(p, d2, theta2);
         xt::xarray<double> F2_dpdp = SF2->getWorldFdpdp(p, d2, theta2);
         xt::xarray<double> F2_dpdx = SF2->getWorldFdpdx(p, d2, theta2);
-        xt::xarray<double> F2_dxdx = SF2->getWorldFdxdx(p, d2, theta2);
 
         double dual_var = getDualVariable(F1_dp, F2_dp);
         xt::xarray<double> alpha_dx = getGradientGeneral(dual_var, F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx);
@@ -161,7 +153,7 @@ std::tuple<double, xt::xarray<double>> getGradient2d(
     }
 }
 
-std::tuple<double, xt::xarray<double>> getGradient3d(
+std::tuple<double, xt::xarray<double>> getGradient3dOld(
     const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
     std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2){
 
@@ -175,28 +167,22 @@ std::tuple<double, xt::xarray<double>> getGradient3d(
         xt::xarray<double> F1_dx1 = SF1->getWorldFdx(p, d1, q1);
         xt::xarray<double> F1_dpdp = SF1->getWorldFdpdp(p, d1, q1);
         xt::xarray<double> F1_dpdx1 = SF1->getWorldFdpdx(p, d1, q1);
-        xt::xarray<double> F1_dx1dx1 = SF1->getWorldFdxdx(p, d1, q1);
 
         xt::xarray<double> F1_dx = xt::zeros<double>({dim_x});
         xt::view(F1_dx, xt::range(0, dim_x1)) = F1_dx1;
         xt::xarray<double> F1_dpdx = xt::zeros<double>({dim_p, dim_x});
         xt::view(F1_dpdx, xt::all(), xt::range(0, dim_x1)) = F1_dpdx1;
-        xt::xarray<double> F1_dxdx = xt::zeros<double>({dim_x, dim_x});
-        xt::view(F1_dxdx, xt::range(0, dim_x1), xt::range(0, dim_x1)) = F1_dx1dx1;
 
         xt::xarray<double> F2_dp = SF2->getWorldFdp(p, d2, q2);
         xt::xarray<double> F2_dx2 = SF2->getWorldFdx(p, d2, q2);
         xt::xarray<double> F2_dpdp = SF2->getWorldFdpdp(p, d2, q2);
         xt::xarray<double> F2_dpdx2 = SF2->getWorldFdpdx(p, d2, q2);
-        xt::xarray<double> F2_dx2dx2 = SF2->getWorldFdxdx(p, d2, q2);
 
         xt::xarray<double> F2_dx = xt::zeros<double>({dim_x});
         xt::view(F2_dx, xt::range(dim_x1, dim_x)) = F2_dx2;
         xt::xarray<double> F2_dpdx = xt::zeros<double>({dim_p, dim_x});
         xt::view(F2_dpdx, xt::all(), xt::range(dim_x1, dim_x)) = F2_dpdx2;
         xt::xarray<double> F2_dxdx = xt::zeros<double>({dim_x, dim_x});
-        xt::view(F2_dxdx, xt::range(dim_x1, dim_x), xt::range(dim_x1, dim_x)) = F2_dx2dx2;
-        xt::xarray<double> F2_dpdpdx = xt::zeros<double>({dim_p, dim_p, dim_x});
 
         double dual_var = getDualVariable(F1_dp, F2_dp);
         xt::xarray<double> alpha_dx = getGradientGeneral(dual_var, F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx);
@@ -211,13 +197,11 @@ std::tuple<double, xt::xarray<double>> getGradient3d(
         xt::xarray<double> F1_dx = SF1->getWorldFdx(p, d1, q1);
         xt::xarray<double> F1_dpdp = SF1->getWorldFdpdp(p, d1, q1);
         xt::xarray<double> F1_dpdx = SF1->getWorldFdpdx(p, d1, q1);
-        xt::xarray<double> F1_dxdx = SF1->getWorldFdxdx(p, d1, q1);
 
         xt::xarray<double> F2_dp = SF2->getWorldFdp(p, d2, q2);
         xt::xarray<double> F2_dx = SF2->getWorldFdx(p, d2, q2);
         xt::xarray<double> F2_dpdp = SF2->getWorldFdpdp(p, d2, q2);
         xt::xarray<double> F2_dpdx = SF2->getWorldFdpdx(p, d2, q2);
-        xt::xarray<double> F2_dxdx = SF2->getWorldFdxdx(p, d2, q2);
 
         double dual_var = getDualVariable(F1_dp, F2_dp);
         xt::xarray<double> alpha_dx = getGradientGeneral(dual_var, F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx);
@@ -226,7 +210,7 @@ std::tuple<double, xt::xarray<double>> getGradient3d(
     }
 }
 
-std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian2d(
+std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian2dOld(
     const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
     std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2){
 
@@ -316,7 +300,7 @@ std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian
     }
 }
 
-std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian3d(
+std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian3dOld(
     const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
     std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2){
 
@@ -395,6 +379,245 @@ std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian
         xt::xarray<double> F2_dpdpdp = SF2->getWorldFdpdpdp(p, d2, q2);
         xt::xarray<double> F2_dpdpdx = SF2->getWorldFdpdpdx(p, d2, q2);
         xt::xarray<double> F2_dpdxdx = SF2->getWorldFdpdxdx(p, d2, q2);
+
+        double dual_var = getDualVariable(F1_dp, F2_dp);
+        xt::xarray<double> alpha_dx, alpha_dxdx;
+        std::tie(alpha_dx, alpha_dxdx) = getGradientAndHessianGeneral(dual_var, 
+            F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx, F1_dxdx, F2_dxdx,
+            F1_dpdpdp, F2_dpdpdp, F1_dpdpdx, F2_dpdpdx, F1_dpdxdx, F2_dpdxdx);
+
+        return std::make_tuple(alpha, alpha_dx, alpha_dxdx);
+    }
+}
+
+std::tuple<double, xt::xarray<double>> getGradient2d(
+    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
+    std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2){
+
+    if (SF1->isMoving == false && SF2->isMoving == false){
+        throw std::invalid_argument("Both scaling functions are not moving.");
+    } else if (SF1->isMoving == true && SF2->isMoving == true){
+        int dim_p = 2, dim_x1 = 3, dim_x2 = 3, dim_x = dim_x1 + dim_x2; // x = [x1,x2]
+        double alpha = SF1->getWorldF(p, d1, theta1);
+
+
+        xt::xarray<double> F1_dp, F1_dx1, F1_dpdp, F1_dpdx1;
+        std::tie(F1_dp, F1_dx1, F1_dpdp, F1_dpdx1) = SF1->getWorldFFirstToSecondDers(p, d1, theta1);
+
+        xt::xarray<double> F1_dx = xt::zeros<double>({dim_x});
+        xt::view(F1_dx, xt::range(0, dim_x1)) = F1_dx1;
+        xt::xarray<double> F1_dpdx = xt::zeros<double>({dim_p, dim_x});
+        xt::view(F1_dpdx, xt::all(), xt::range(0, dim_x1)) = F1_dpdx1;
+
+        xt::xarray<double> F2_dp, F2_dx2, F2_dpdp, F2_dpdx2;
+        std::tie(F2_dp, F2_dx2, F2_dpdp, F2_dpdx2) = SF2->getWorldFFirstToSecondDers(p, d2, theta2);
+
+        xt::xarray<double> F2_dx = xt::zeros<double>({dim_x});
+        xt::view(F2_dx, xt::range(dim_x1, dim_x)) = F2_dx2;
+        xt::xarray<double> F2_dpdx = xt::zeros<double>({dim_p, dim_x});
+        xt::view(F2_dpdx, xt::all(), xt::range(dim_x1, dim_x)) = F2_dpdx2;
+        xt::xarray<double> F2_dxdx = xt::zeros<double>({dim_x, dim_x});
+
+        double dual_var = getDualVariable(F1_dp, F2_dp);
+        xt::xarray<double> alpha_dx = getGradientGeneral(dual_var, F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx);
+
+        return std::make_tuple(alpha, alpha_dx);
+        
+    } else { // one of the scaling functions is moving
+        // int dim_p = 2, dim_x = 3;
+        double alpha = SF1->getWorldF(p, d1, theta1);
+
+        xt::xarray<double> F1_dp, F1_dx, F1_dpdp, F1_dpdx;
+        std::tie(F1_dp, F1_dx, F1_dpdp, F1_dpdx) = SF1->getWorldFFirstToSecondDers(p, d1, theta1);
+
+        xt::xarray<double> F2_dp, F2_dx, F2_dpdp, F2_dpdx;
+        std::tie(F2_dp, F2_dx, F2_dpdp, F2_dpdx) = SF2->getWorldFFirstToSecondDers(p, d2, theta2);
+
+        double dual_var = getDualVariable(F1_dp, F2_dp);
+        xt::xarray<double> alpha_dx = getGradientGeneral(dual_var, F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx);
+
+        return std::make_tuple(alpha, alpha_dx);
+    }
+}
+
+std::tuple<double, xt::xarray<double>> getGradient3d(
+    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
+    std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2){
+
+    if (SF1->isMoving == false && SF2->isMoving == false){
+        throw std::invalid_argument("Both scaling functions are not moving.");
+    } else if (SF1->isMoving == true && SF2->isMoving == true){
+        int dim_p = 3, dim_x1 = 7, dim_x2 = 7, dim_x = dim_x1 + dim_x2; // x = [x1,x2]
+        double alpha = SF1->getWorldF(p, d1, q1);
+
+        xt::xarray<double> F1_dp, F1_dx1, F1_dpdp, F1_dpdx1;
+        std::tie(F1_dp, F1_dx1, F1_dpdp, F1_dpdx1) = SF1->getWorldFFirstToSecondDers(p, d1, q1);
+
+        xt::xarray<double> F1_dx = xt::zeros<double>({dim_x});
+        xt::view(F1_dx, xt::range(0, dim_x1)) = F1_dx1;
+        xt::xarray<double> F1_dpdx = xt::zeros<double>({dim_p, dim_x});
+        xt::view(F1_dpdx, xt::all(), xt::range(0, dim_x1)) = F1_dpdx1;
+
+        xt::xarray<double> F2_dp, F2_dx2, F2_dpdp, F2_dpdx2;
+        std::tie(F2_dp, F2_dx2, F2_dpdp, F2_dpdx2) = SF2->getWorldFFirstToSecondDers(p, d2, q2);
+
+        xt::xarray<double> F2_dx = xt::zeros<double>({dim_x});
+        xt::view(F2_dx, xt::range(dim_x1, dim_x)) = F2_dx2;
+        xt::xarray<double> F2_dpdx = xt::zeros<double>({dim_p, dim_x});
+        xt::view(F2_dpdx, xt::all(), xt::range(dim_x1, dim_x)) = F2_dpdx2;
+        xt::xarray<double> F2_dxdx = xt::zeros<double>({dim_x, dim_x});
+
+        double dual_var = getDualVariable(F1_dp, F2_dp);
+        xt::xarray<double> alpha_dx = getGradientGeneral(dual_var, F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx);
+
+        return std::make_tuple(alpha, alpha_dx);
+        
+    } else { // one of the scaling functions is moving
+        // int dim_p = 3, dim_x = 7;
+        double alpha = SF1->getWorldF(p, d1, q1);
+
+        xt::xarray<double> F1_dp, F1_dx, F1_dpdp, F1_dpdx;
+        std::tie(F1_dp, F1_dx, F1_dpdp, F1_dpdx) = SF1->getWorldFFirstToSecondDers(p, d1, q1);
+
+        xt::xarray<double> F2_dp, F2_dx, F2_dpdp, F2_dpdx;
+        std::tie(F2_dp, F2_dx, F2_dpdp, F2_dpdx) = SF2->getWorldFFirstToSecondDers(p, d2, q2);
+
+        double dual_var = getDualVariable(F1_dp, F2_dp);
+        xt::xarray<double> alpha_dx = getGradientGeneral(dual_var, F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx);
+
+        return std::make_tuple(alpha, alpha_dx);
+    }
+}
+
+std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian2d(
+    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction2d> SF1, const xt::xarray<double>& d1, double theta1,
+    std::shared_ptr<ScalingFunction2d> SF2, const xt::xarray<double>& d2, double theta2){
+
+    if (SF1->isMoving == false && SF2->isMoving == false){
+        throw std::invalid_argument("Both scaling functions are not moving.");
+    } else if (SF1->isMoving == true && SF2->isMoving == true){
+        int dim_p = 2, dim_x1 = 3, dim_x2 = 3, dim_x = dim_x1 + dim_x2; // x = [x1,x2]
+        double alpha = SF1->getWorldF(p, d1, theta1);
+
+        xt::xarray<double> F1_dp, F1_dx1, F1_dpdp, F1_dpdx1, F1_dx1dx1, F1_dpdpdp, F1_dpdpdx1, F1_dpdx1dx1;
+        std::tie(F1_dp, F1_dx1, F1_dpdp, F1_dpdx1, F1_dx1dx1, F1_dpdpdp, F1_dpdpdx1, F1_dpdx1dx1) 
+            = SF1->getWorldFFirstToThirdDers(p, d1, theta1);
+
+        xt::xarray<double> F1_dx = xt::zeros<double>({dim_x});
+        xt::view(F1_dx, xt::range(0, dim_x1)) = F1_dx1;
+        xt::xarray<double> F1_dpdx = xt::zeros<double>({dim_p, dim_x});
+        xt::view(F1_dpdx, xt::all(), xt::range(0, dim_x1)) = F1_dpdx1;
+        xt::xarray<double> F1_dxdx = xt::zeros<double>({dim_x, dim_x});
+        xt::view(F1_dxdx, xt::range(0, dim_x1), xt::range(0, dim_x1)) = F1_dx1dx1;
+        xt::xarray<double> F1_dpdpdx = xt::zeros<double>({dim_p, dim_p, dim_x});
+        xt::view(F1_dpdpdx, xt::all(), xt::all(), xt::range(0, dim_x1)) = F1_dpdpdx1;
+        xt::xarray<double> F1_dpdxdx = xt::zeros<double>({dim_p, dim_x, dim_x});
+        xt::view(F1_dpdxdx, xt::all(), xt::range(0, dim_x1), xt::range(0, dim_x1)) = F1_dpdx1dx1;
+
+        xt::xarray<double> F2_dp, F2_dx2, F2_dpdp, F2_dpdx2, F2_dx2dx2, F2_dpdpdp, F2_dpdpdx2, F2_dpdx2dx2;
+        std::tie(F2_dp, F2_dx2, F2_dpdp, F2_dpdx2, F2_dx2dx2, F2_dpdpdp, F2_dpdpdx2, F2_dpdx2dx2) 
+            = SF2->getWorldFFirstToThirdDers(p, d2, theta2);
+
+        xt::xarray<double> F2_dx = xt::zeros<double>({dim_x});
+        xt::view(F2_dx, xt::range(dim_x1, dim_x)) = F2_dx2;
+        xt::xarray<double> F2_dpdx = xt::zeros<double>({dim_p, dim_x});
+        xt::view(F2_dpdx, xt::all(), xt::range(dim_x1, dim_x)) = F2_dpdx2;
+        xt::xarray<double> F2_dxdx = xt::zeros<double>({dim_x, dim_x});
+        xt::view(F2_dxdx, xt::range(dim_x1, dim_x), xt::range(dim_x1, dim_x)) = F2_dx2dx2;
+        xt::xarray<double> F2_dpdpdx = xt::zeros<double>({dim_p, dim_p, dim_x});
+        xt::view(F2_dpdpdx, xt::all(), xt::all(), xt::range(dim_x1, dim_x)) = F2_dpdpdx2;
+        xt::xarray<double> F2_dpdxdx = xt::zeros<double>({dim_p, dim_x, dim_x});
+        xt::view(F2_dpdxdx, xt::all(), xt::range(dim_x1, dim_x), xt::range(dim_x1, dim_x)) = F2_dpdx2dx2;
+
+        double dual_var = getDualVariable(F1_dp, F2_dp);
+        xt::xarray<double> alpha_dx, alpha_dxdx;
+        std::tie(alpha_dx, alpha_dxdx) = getGradientAndHessianGeneral(dual_var, 
+            F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx, F1_dxdx, F2_dxdx,
+            F1_dpdpdp, F2_dpdpdp, F1_dpdpdx, F2_dpdpdx, F1_dpdxdx, F2_dpdxdx);
+        
+        return std::make_tuple(alpha, alpha_dx, alpha_dxdx);
+        
+    } else { // one of the scaling functions is moving
+        // int dim_p = 2, dim_x = 3;
+        double alpha = SF1->getWorldF(p, d1, theta1);
+
+        xt::xarray<double> F1_dp, F1_dx, F1_dpdp, F1_dpdx, F1_dxdx, F1_dpdpdp, F1_dpdpdx, F1_dpdxdx;
+        std::tie(F1_dp, F1_dx, F1_dpdp, F1_dpdx, F1_dxdx, F1_dpdpdp, F1_dpdpdx, F1_dpdxdx) 
+            = SF1->getWorldFFirstToThirdDers(p, d1, theta1);
+
+        xt::xarray<double> F2_dp, F2_dx, F2_dpdp, F2_dpdx, F2_dxdx, F2_dpdpdp, F2_dpdpdx, F2_dpdxdx;
+        std::tie(F2_dp, F2_dx, F2_dpdp, F2_dpdx, F2_dxdx, F2_dpdpdp, F2_dpdpdx, F2_dpdxdx) 
+            = SF2->getWorldFFirstToThirdDers(p, d2, theta2);
+
+        double dual_var = getDualVariable(F1_dp, F2_dp);
+        xt::xarray<double> alpha_dx, alpha_dxdx;
+        std::tie(alpha_dx, alpha_dxdx) = getGradientAndHessianGeneral(dual_var, 
+            F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx, F1_dxdx, F2_dxdx,
+            F1_dpdpdp, F2_dpdpdp, F1_dpdpdx, F2_dpdpdx, F1_dpdxdx, F2_dpdxdx);
+
+        return std::make_tuple(alpha, alpha_dx, alpha_dxdx);
+    }
+}
+
+std::tuple<double, xt::xarray<double>, xt::xarray<double>> getGradientAndHessian3d(
+    const xt::xarray<double>& p, std::shared_ptr<ScalingFunction3d> SF1, const xt::xarray<double>& d1, const xt::xarray<double>& q1,
+    std::shared_ptr<ScalingFunction3d> SF2, const xt::xarray<double>& d2, const xt::xarray<double>& q2){
+
+    if (SF1->isMoving == false && SF2->isMoving == false){
+        throw std::invalid_argument("Both scaling functions are not moving.");
+    } else if (SF1->isMoving == true && SF2->isMoving == true){
+        int dim_p = 3, dim_x1 = 7, dim_x2 = 7, dim_x = dim_x1 + dim_x2; // x = [x1,x2]
+        double alpha = SF1->getWorldF(p, d1, q1);
+
+        xt::xarray<double> F1_dp, F1_dx1, F1_dpdp, F1_dpdx1, F1_dx1dx1, F1_dpdpdp, F1_dpdpdx1, F1_dpdx1dx1;
+        std::tie(F1_dp, F1_dx1, F1_dpdp, F1_dpdx1, F1_dx1dx1, F1_dpdpdp, F1_dpdpdx1, F1_dpdx1dx1) 
+            = SF1->getWorldFFirstToThirdDers(p, d1, q1);
+
+        xt::xarray<double> F1_dx = xt::zeros<double>({dim_x});
+        xt::view(F1_dx, xt::range(0, dim_x1)) = F1_dx1;
+        xt::xarray<double> F1_dpdx = xt::zeros<double>({dim_p, dim_x});
+        xt::view(F1_dpdx, xt::all(), xt::range(0, dim_x1)) = F1_dpdx1;
+        xt::xarray<double> F1_dxdx = xt::zeros<double>({dim_x, dim_x});
+        xt::view(F1_dxdx, xt::range(0, dim_x1), xt::range(0, dim_x1)) = F1_dx1dx1;
+        xt::xarray<double> F1_dpdpdx = xt::zeros<double>({dim_p, dim_p, dim_x});
+        xt::view(F1_dpdpdx, xt::all(), xt::all(), xt::range(0, dim_x1)) = F1_dpdpdx1;
+        xt::xarray<double> F1_dpdxdx = xt::zeros<double>({dim_p, dim_x, dim_x});
+        xt::view(F1_dpdxdx, xt::all(), xt::range(0, dim_x1), xt::range(0, dim_x1)) = F1_dpdx1dx1;
+
+        xt::xarray<double> F2_dp, F2_dx2, F2_dpdp, F2_dpdx2, F2_dx2dx2, F2_dpdpdp, F2_dpdpdx2, F2_dpdx2dx2;
+        std::tie(F2_dp, F2_dx2, F2_dpdp, F2_dpdx2, F2_dx2dx2, F2_dpdpdp, F2_dpdpdx2, F2_dpdx2dx2) 
+            = SF2->getWorldFFirstToThirdDers(p, d2, q2);
+
+        xt::xarray<double> F2_dx = xt::zeros<double>({dim_x});
+        xt::view(F2_dx, xt::range(dim_x1, dim_x)) = F2_dx2;
+        xt::xarray<double> F2_dpdx = xt::zeros<double>({dim_p, dim_x});
+        xt::view(F2_dpdx, xt::all(), xt::range(dim_x1, dim_x)) = F2_dpdx2;
+        xt::xarray<double> F2_dxdx = xt::zeros<double>({dim_x, dim_x});
+        xt::view(F2_dxdx, xt::range(dim_x1, dim_x), xt::range(dim_x1, dim_x)) = F2_dx2dx2;
+        xt::xarray<double> F2_dpdpdx = xt::zeros<double>({dim_p, dim_p, dim_x});
+        xt::view(F2_dpdpdx, xt::all(), xt::all(), xt::range(dim_x1, dim_x)) = F2_dpdpdx2;
+        xt::xarray<double> F2_dpdxdx = xt::zeros<double>({dim_p, dim_x, dim_x});
+        xt::view(F2_dpdxdx, xt::all(), xt::range(dim_x1, dim_x), xt::range(dim_x1, dim_x)) = F2_dpdx2dx2;
+
+        double dual_var = getDualVariable(F1_dp, F2_dp);
+        xt::xarray<double> alpha_dx, alpha_dxdx;
+        std::tie(alpha_dx, alpha_dxdx) = getGradientAndHessianGeneral(dual_var, 
+            F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx, F1_dxdx, F2_dxdx,
+            F1_dpdpdp, F2_dpdpdp, F1_dpdpdx, F2_dpdpdx, F1_dpdxdx, F2_dpdxdx);
+        
+        return std::make_tuple(alpha, alpha_dx, alpha_dxdx);
+        
+    } else { // one of the scaling functions is moving
+        // int dim_p = 3, dim_x = 7;
+        double alpha = SF1->getWorldF(p, d1, q1);
+
+        xt::xarray<double> F1_dp, F1_dx, F1_dpdp, F1_dpdx, F1_dxdx, F1_dpdpdp, F1_dpdpdx, F1_dpdxdx;
+        std::tie(F1_dp, F1_dx, F1_dpdp, F1_dpdx, F1_dxdx, F1_dpdpdp, F1_dpdpdx, F1_dpdxdx) 
+            = SF1->getWorldFFirstToThirdDers(p, d1, q1);
+
+        xt::xarray<double> F2_dp, F2_dx, F2_dpdp, F2_dpdx, F2_dxdx, F2_dpdpdp, F2_dpdpdx, F2_dpdxdx;
+        std::tie(F2_dp, F2_dx, F2_dpdp, F2_dpdx, F2_dxdx, F2_dpdpdp, F2_dpdpdx, F2_dpdxdx) 
+            = SF2->getWorldFFirstToThirdDers(p, d2, q2);
 
         double dual_var = getDualVariable(F1_dp, F2_dp);
         xt::xarray<double> alpha_dx, alpha_dxdx;
