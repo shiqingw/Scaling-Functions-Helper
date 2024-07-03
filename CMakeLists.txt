@@ -5,9 +5,11 @@ project(scalingFunctionsHelper VERSION 0.1.0)
 find_package(OpenBLAS REQUIRED)
 find_package(Python REQUIRED COMPONENTS Interpreter Development NumPy)
 find_package(pybind11 REQUIRED CONFIG)
+find_package(xtl REQUIRED)
 find_package(xtensor REQUIRED)
 find_package(xtensor-blas REQUIRED)
 find_package(xtensor-python REQUIRED)
+find_package(xsimd REQUIRED)
 
 option(BUILD_PYTHON_MODULE "Build the python model" OFF)
 
@@ -32,6 +34,10 @@ if (BUILD_PYTHON_MODULE)
     # If OpenBLAS provides a target, use it directly. If not, specify the library path as you did.
     target_link_libraries(scalingFunctionsHelperPy PUBLIC
         pybind11::module
+        xtensor
+        xtensor::optimize
+        # xsimd # Do not use this, code gets slower
+        # xtensor::use_xsimd # Do not use this, code gets slower
         xtensor-python
         Python::NumPy
         ${OpenBLAS_LIBRARIES}  # Use the variable set by find_package if available
@@ -45,6 +51,8 @@ if (BUILD_PYTHON_MODULE)
     )
 
     target_compile_definitions(scalingFunctionsHelperPy PRIVATE VERSION_INFO=0.1.0)
+
+    set_property(TARGET scalingFunctionsHelperPy PROPERTY CXX_STANDARD 14)
 
 else()
     # Create a separate library target for your C++ code
@@ -65,6 +73,10 @@ else()
 
     # Link the libraries needed by your C++ code
     target_link_libraries(scalingFunctionsHelper PUBLIC
+    xtensor
+    xtensor::optimize
+    # xsimd # Do not use this, code gets slower
+    # xtensor::use_xsimd # Do not use this, code gets slower
     xtensor-python
     ${OpenBLAS_LIBRARIES}
     pthread
@@ -77,6 +89,8 @@ else()
     )
 
     target_compile_definitions(scalingFunctionsHelper PRIVATE VERSION_INFO=0.1.0)
+
+    set_property(TARGET scalingFunctionsHelper PROPERTY CXX_STANDARD 14)
 
     # Specify the installation paths for the dynamic library
     install(TARGETS scalingFunctionsHelper
