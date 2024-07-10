@@ -5,9 +5,9 @@ getSmoothMinimumAndLocalGradientAndHessian(const double rho, const xt::xarray<do
     
     int dim_h = h.shape()[0];
     double c = xt::amin(h)();
-    xt::xarray<double> z = xt::exp(-rho*(h - c));
+    xt::xarray<double> z = xt::exp(-rho*(h - c))/(double)dim_h;
     double sum_z = xt::sum(z)();
-    double F = -log(sum_z/(double)dim_h)/rho + c;
+    double F = -log(sum_z)/rho + c;
 
     xt::xarray<double> F_dh = z / sum_z; // shape N
 
