@@ -1,6 +1,6 @@
 import sympy as sp
 import numpy as np
-import scalingFunctionsHelper as doh
+import scalingFunctionsHelperPy as doh
 from scipy.spatial.transform import Rotation
 
 theta = sp.symbols('theta', real=True)

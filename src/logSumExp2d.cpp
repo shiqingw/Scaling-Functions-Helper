@@ -5,9 +5,9 @@ double LogSumExp2d::getBodyF(const xt::xarray<double>& P) const{
     int dim_z = A.shape()[0];
     xt::xarray<double> z = kappa * (xt::linalg::dot(A, P) + b);
     double c = xt::amax(z)();
-    z = xt::exp(z - c);
+    z = xt::exp(z - c)/(double)dim_z;
     double sum_z = xt::sum(z)();
-    double F = log(sum_z) + c - log((double)dim_z) + 1;
+    double F = log(sum_z) + c + 1;
 
     return F;
 }
@@ -17,7 +17,7 @@ xt::xarray<double> LogSumExp2d::getBodyFdP(const xt::xarray<double>& P) const{
     int dim_p = P.shape()[0], dim_z = A.shape()[0];
     xt::xarray<double> z = kappa * (xt::linalg::dot(A, P) + b);
     double c = xt::amax(z)();
-    z = xt::exp(z - c);
+    z = xt::exp(z - c)/(double)dim_z;
     double sum_z = xt::sum(z)();
 
     xt::xarray<double> zT_A = xt::linalg::dot(z, A); // shape: (dim_p,)
@@ -31,7 +31,7 @@ xt::xarray<double> LogSumExp2d::getBodyFdPdP(const xt::xarray<double>& P) const{
     int dim_p = P.shape()[0], dim_z = A.shape()[0];
     xt::xarray<double> z = kappa * (xt::linalg::dot(A, P) + b);
     double c = xt::amax(z)();
-    z = xt::exp(z - c);
+    z = xt::exp(z - c)/(double)dim_z;
     double sum_z = xt::sum(z)();
 
     xt::xarray<double> zT_A = xt::linalg::dot(z, A); // shape: (dim_p,)
@@ -50,7 +50,7 @@ xt::xarray<double> LogSumExp2d::getBodyFdPdPdP(const xt::xarray<double>& P) cons
     int dim_p = P.shape()[0], dim_z = A.shape()[0];
     xt::xarray<double> z = kappa * (xt::linalg::dot(A, P) + b);
     double c = xt::amax(z)();
-    z = xt::exp(z - c);
+    z = xt::exp(z - c)/(double)dim_z;
     double sum_z = xt::sum(z)();
 
     xt::xarray<double> zT_A = xt::linalg::dot(z, A); // shape: (dim_p,)
