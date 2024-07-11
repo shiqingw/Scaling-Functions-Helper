@@ -73,6 +73,8 @@ PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx)
+        .def("getWorldFFirstToSecondDers", &ScalingFunction3d::getWorldFFirstToSecondDers)
+        .def("getWorldFFirstToThirdDers", &ScalingFunction3d::getWorldFFirstToThirdDers)
         .def(py::pickle(
             [](const Ellipsoid3d &e) { // __getstate__
                 return py::make_tuple(e.isMoving, e.Q, e.mu);
@@ -111,6 +113,8 @@ PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx)
+        .def("getWorldFFirstToSecondDers", &ScalingFunction3d::getWorldFFirstToSecondDers)
+        .def("getWorldFFirstToThirdDers", &ScalingFunction3d::getWorldFFirstToThirdDers)
         .def(py::pickle(
             [](const LogSumExp3d &l) { // __getstate__
                 return py::make_tuple(l.isMoving, l.A, l.b, l.kappa);
@@ -148,6 +152,8 @@ PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx)
+        .def("getWorldFFirstToSecondDers", &ScalingFunction3d::getWorldFFirstToSecondDers)
+        .def("getWorldFFirstToThirdDers", &ScalingFunction3d::getWorldFFirstToThirdDers)
         .def(py::pickle(
             [](const Hyperplane3d &h) { // __getstate__
                 return py::make_tuple(h.isMoving, h.a, h.b);
@@ -187,6 +193,8 @@ PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
         .def("getWorldFdpdpdp", &ScalingFunction3d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction3d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction3d::getWorldFdpdxdx)
+        .def("getWorldFFirstToSecondDers", &ScalingFunction3d::getWorldFFirstToSecondDers)
+        .def("getWorldFFirstToThirdDers", &ScalingFunction3d::getWorldFFirstToThirdDers)
         .def(py::pickle(
             [](const Superquadrics3d &s) { // __getstate__
                 return py::make_tuple(s.isMoving, s.c, s.a, s.e1, s.e2);
@@ -229,6 +237,8 @@ PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
         .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx)
+        .def("getWorldFFirstToSecondDers", &ScalingFunction2d::getWorldFFirstToSecondDers)
+        .def("getWorldFFirstToThirdDers", &ScalingFunction2d::getWorldFFirstToThirdDers)
         .def(py::pickle(
             [](const Ellipsoid2d &e) { // __getstate__
                 return py::make_tuple(e.isMoving, e.Q, e.mu);
@@ -268,6 +278,8 @@ PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
         .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx)
+        .def("getWorldFFirstToSecondDers", &ScalingFunction2d::getWorldFFirstToSecondDers)
+        .def("getWorldFFirstToThirdDers", &ScalingFunction2d::getWorldFFirstToThirdDers)
         .def(py::pickle(
             [](const LogSumExp2d &l) { // __getstate__
                 return py::make_tuple(l.isMoving, l.A, l.b, l.kappa);
@@ -305,6 +317,8 @@ PYBIND11_MODULE(scalingFunctionsHelperPy, m) {
         .def("getWorldFdpdpdp", &ScalingFunction2d::getWorldFdpdpdp)
         .def("getWorldFdpdpdx", &ScalingFunction2d::getWorldFdpdpdx)
         .def("getWorldFdpdxdx", &ScalingFunction2d::getWorldFdpdxdx)
+        .def("getWorldFFirstToSecondDers", &ScalingFunction2d::getWorldFFirstToSecondDers)
+        .def("getWorldFFirstToThirdDers", &ScalingFunction2d::getWorldFFirstToThirdDers)
         .def(py::pickle(
             [](const Hyperplane2d &h) { // __getstate__
                 return py::make_tuple(h.isMoving, h.a, h.b);
