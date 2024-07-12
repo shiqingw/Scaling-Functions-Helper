@@ -1,6 +1,6 @@
 import sympy as sp
 import numpy as np
-import scalingFunctionsHelper as doh
+import scalingFunctionsHelperPy as doh
 from scipy.spatial.transform import Rotation
 
 theta = sp.symbols('theta', real=True)
@@ -137,3 +137,6 @@ for i in range(dim_p):
             theory[i,j,k] = symbol.subs(sub_pairs)
 answer = SF.getWorldFdpdxdx(p_np, d_np, theta_np)
 print(np.allclose(theory, answer, rtol=1e-10, atol=1e-10))
+
+import timeit
+print(timeit.timeit('SF.getWorldFFirstToThirdDers(p_np, d_np, theta_np)', globals=globals(), number=10000))

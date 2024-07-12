@@ -9,7 +9,7 @@ double signum(double n) {
     }
 }
 
-double Superquadrics3d::getBodyF(const xt::xtensor<double, 1>& P) const{
+double Superquadrics3d::getBodyF(const xt::xarray<double>& P) const{
 
     double a1 = a(0), a2 = a(1), a3 = a(2);
     double c1 = c(0), c2 = c(1), c3 = c(2);
@@ -18,14 +18,14 @@ double Superquadrics3d::getBodyF(const xt::xtensor<double, 1>& P) const{
     return std::pow(std::pow(x, 2/e2) + std::pow(y, 2/e2), e2/e1) + std::pow(z, 2/e1);
 }
 
-xt::xtensor<double, 1> Superquadrics3d::getBodyFdP(const xt::xtensor<double, 1>& P) const{
+xt::xarray<double> Superquadrics3d::getBodyFdP(const xt::xarray<double>& P) const{
 
     double a1 = a(0), a2 = a(1), a3 = a(2);
     double c1 = c(0), c2 = c(1), c3 = c(2);
     double x = std::abs(P(0)-c1)/a1, y = std::abs(P(1)-c2)/a2, z = std::abs(P(2)-c3)/a3;
     double sx = signum(P(0)-c1)/a1, sy = signum(P(1)-c2)/a2, sz = signum(P(2)-c3)/a3;
 
-    xt::xtensor<double, 1> F_dP = xt::zeros<double>({3});
+    xt::xarray<double> F_dP = xt::zeros<double>({3});
     F_dP(0) = 2*std::pow(x, (2 - e2)/e2)*std::pow(std::pow(x, 2/e2) + std::pow(y, 2/e2), (-e1 + e2)/e1)/e1;
     F_dP(0) = sx * F_dP(0);
     F_dP(1) = 2*std::pow(y, (2 - e2)/e2)*std::pow(std::pow(x, 2/e2) + std::pow(y, 2/e2), (-e1 + e2)/e1)/e1;
@@ -36,14 +36,14 @@ xt::xtensor<double, 1> Superquadrics3d::getBodyFdP(const xt::xtensor<double, 1>&
     return F_dP;
 }
 
-xt::xtensor<double, 2> Superquadrics3d::getBodyFdPdP(const xt::xtensor<double, 1>& P) const{
+xt::xarray<double> Superquadrics3d::getBodyFdPdP(const xt::xarray<double>& P) const{
 
     double a1 = a(0), a2 = a(1), a3 = a(2);
     double c1 = c(0), c2 = c(1), c3 = c(2);
     double x = std::abs(P(0)-c1)/a1, y = std::abs(P(1)-c2)/a2, z = std::abs(P(2)-c3)/a3;
     double sx = signum(P(0)-c1)/a1, sy = signum(P(1)-c2)/a2, sz = signum(P(2)-c3)/a3;
 
-    xt::xtensor<double, 2> F_dPdP = xt::zeros<double>({3,3});
+    xt::xarray<double> F_dPdP = xt::zeros<double>({3,3});
     F_dPdP(0,0) = 2*std::pow(x, -2 + 2/e2)*std::pow(std::pow(x, 2/e2) + std::pow(y, 2/e2), e2/e1)*(-e1*e2*std::pow(x, 2/e2) - e1*e2*std::pow(y, 2/e2) + 2*e1*std::pow(y, 2/e2) + 2*e2*std::pow(x, 2/e2))/(std::pow(e1, 2)*e2*(std::pow(x, 4/e2) + 2*std::pow(x, 2/e2)*std::pow(y, 2/e2) + std::pow(y, 4/e2)));
     F_dPdP(0,0) = sx * sx * F_dPdP(0,0);
     F_dPdP(0,1) = 4*std::pow(x, -2 + (e2 + 2)/e2)*std::pow(y, -2 + (e2 + 2)/e2)*(-e1 + e2)*std::pow(std::pow(x, 2/e2) + std::pow(y, 2/e2), -4 + (2*e1 + e2)/e1)/(std::pow(e1, 2)*e2);
@@ -58,14 +58,14 @@ xt::xtensor<double, 2> Superquadrics3d::getBodyFdPdP(const xt::xtensor<double, 1
     return F_dPdP;
 }
 
-xt::xtensor<double, 3> Superquadrics3d::getBodyFdPdPdP(const xt::xtensor<double, 1>& P) const{
+xt::xarray<double> Superquadrics3d::getBodyFdPdPdP(const xt::xarray<double>& P) const{
 
     double a1 = a(0), a2 = a(1), a3 = a(2);
     double c1 = c(0), c2 = c(1), c3 = c(2);
     double x = std::abs(P(0)-c1)/a1, y = std::abs(P(1)-c2)/a2, z = std::abs(P(2)-c3)/a3;
     double sx = signum(P(0)-c1)/a1, sy = signum(P(1)-c2)/a2, sz = signum(P(2)-c3)/a3;
 
-    xt::xtensor<double, 3> F_dPdPdP = xt::zeros<double>({3,3,3});
+    xt::xarray<double> F_dPdPdP = xt::zeros<double>({3,3,3});
     F_dPdPdP(0,0,0) = 4*std::pow(x, -3 + 2/e2)*std::pow(std::pow(x, 2/e2) + std::pow(y, 2/e2), e2/e1)*(std::pow(e1, 2)*std::pow(e2, 2)*std::pow(x, 4/e2) + 2*std::pow(e1, 2)*std::pow(e2, 2)*std::pow(x, 2/e2)*std::pow(y, 2/e2) + std::pow(e1, 2)*std::pow(e2, 2)*std::pow(y, 4/e2) - 3*std::pow(e1, 2)*e2*std::pow(x, 2/e2)*std::pow(y, 2/e2) - 3*std::pow(e1, 2)*e2*std::pow(y, 4/e2) - 2*std::pow(e1, 2)*std::pow(x, 2/e2)*std::pow(y, 2/e2) + 2*std::pow(e1, 2)*std::pow(y, 4/e2) - 3*e1*std::pow(e2, 2)*std::pow(x, 4/e2) - 3*e1*std::pow(e2, 2)*std::pow(x, 2/e2)*std::pow(y, 2/e2) + 6*e1*e2*std::pow(x, 2/e2)*std::pow(y, 2/e2) + 2*std::pow(e2, 2)*std::pow(x, 4/e2))/(std::pow(e1, 3)*std::pow(e2, 2)*(std::pow(x, 6/e2) + 3*std::pow(x, 4/e2)*std::pow(y, 2/e2) + 3*std::pow(x, 2/e2)*std::pow(y, 4/e2) + std::pow(y, 6/e2)));
     F_dPdPdP(0,0,0) = sx * sx * sx * F_dPdPdP(0,0,0);
     F_dPdPdP(0,0,1) = 4*std::pow(x, -2 + 2/e2)*std::pow(y, -1 + 2/e2)*std::pow(std::pow(x, 2/e2) + std::pow(y, 2/e2), e2/e1)*(std::pow(e1, 2)*e2*std::pow(x, 2/e2) + std::pow(e1, 2)*e2*std::pow(y, 2/e2) + 2*std::pow(e1, 2)*std::pow(x, 2/e2) - 2*std::pow(e1, 2)*std::pow(y, 2/e2) - e1*std::pow(e2, 2)*std::pow(x, 2/e2) - e1*std::pow(e2, 2)*std::pow(y, 2/e2) - 4*e1*e2*std::pow(x, 2/e2) + 2*e1*e2*std::pow(y, 2/e2) + 2*std::pow(e2, 2)*std::pow(x, 2/e2))/(std::pow(e1, 3)*std::pow(e2, 2)*(std::pow(x, 6/e2) + 3*std::pow(x, 4/e2)*std::pow(y, 2/e2) + 3*std::pow(x, 2/e2)*std::pow(y, 4/e2) + std::pow(y, 6/e2)));

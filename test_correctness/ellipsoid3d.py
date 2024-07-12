@@ -2,6 +2,7 @@ import sympy as sp
 import numpy as np
 import scalingFunctionsHelperPy as doh
 from scipy.spatial.transform import Rotation
+import timeit
 
 qx, qy, qz, qw = sp.symbols('qx qy qz qw', real=True)
 r11, r12, r13, r21, r22, r23, r31, r32, r33 = sp.symbols('r11 r12 r13 r21 r22 r23 r31 r32 r33', real=True)
@@ -134,3 +135,5 @@ for i in range(dim_p):
             theory[i,j,k] = symbol.subs(sub_pairs)
 answer = SF.getWorldFdpdxdx(p_np, d_np, q_np)
 print(np.allclose(theory, answer, rtol=1e-10, atol=1e-10))
+
+print(timeit.timeit('SF.getWorldFFirstToThirdDers(p_np, d_np, q_np)', globals=globals(), number=10000))

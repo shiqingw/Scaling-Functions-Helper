@@ -1,7 +1,7 @@
 import sympy as sp
 import numpy as np
 import diffOptHelper as doh1
-import scalingFunctionsHelper as doh2
+import scalingFunctionsHelperPy as doh2
 from scipy.spatial.transform import Rotation
 
 Q1 = np.random.rand(3)**2 + 1
@@ -55,3 +55,7 @@ print(np.allclose(p_rimon1, p_rimon2))
 print(np.allclose(alpha1, alpha2))
 print(np.allclose(alpha_dx1, alpha_dx2))
 print(np.allclose(alpha_dxdx1, alpha_dxdx2))
+
+import timeit
+print(timeit.timeit(lambda: doh2.rimonMethod3d(SF1, d1, q1, SF2, d2, q2), number=10000))
+print(timeit.timeit(lambda: doh2.getGradientAndHessian3d(p_rimon1, SF1, d1, q1, SF2, d2, q2), number=10000))

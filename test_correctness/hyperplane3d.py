@@ -1,6 +1,6 @@
 import sympy as sp
 import numpy as np
-import scalingFunctionsHelper as doh
+import scalingFunctionsHelperPy as doh
 from scipy.spatial.transform import Rotation
 
 qx, qy, qz, qw = sp.symbols('qx qy qz qw', real=True)
@@ -120,4 +120,4 @@ answer = SF.getWorldFdpdxdx(p_np, d_np, q_np)
 print(np.allclose(theory, answer, rtol=1e-10, atol=1e-10))
 
 import timeit
-print(timeit.timeit('SF.getWorldFdpdxdx(p_np, d_np, q_np)', globals=globals(), number=10000))
+print(timeit.timeit('SF.getWorldFFirstToThirdDers(p_np, d_np, q_np)', globals=globals(), number=10000))

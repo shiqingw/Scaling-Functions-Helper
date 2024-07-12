@@ -117,4 +117,4 @@ answer = SF.getWorldFdpdxdx(p_np, d_np, q_np)
 print(np.allclose(theory, answer, rtol=1e-10, atol=1e-10))
 
 import timeit
-print(timeit.timeit('SF.getWorldFdpdxdx(p_np, d_np, q_np)', globals=globals(), number=10000))
+print(timeit.timeit('SF.getWorldFFirstToThirdDers(p_np, d_np, q_np)', globals=globals(), number=10000))
