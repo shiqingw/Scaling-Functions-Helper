@@ -71,6 +71,23 @@ class LogSumExp3d : public ScalingFunction3d {
          * @return xt::xtensor<double, 3> d^3F/dPdPdP, shape: (dim_p, dim_p, dim_p)
          */
         xt::xtensor<double, 3> getBodyFdPdPdP(const xt::xtensor<double, 1>& P) const override;
+
+        /**
+         * @brief Get the matrix coefficient A' = A R^T in the world frame.
+         * 
+         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @return xt::xtensor<double, 2> A', shape: (N, dim_p)
+         */
+        xt::xtensor<double, 2> getWorldMatrixCoefficient(const xt::xtensor<double, 1>& q) const;
+
+        /**
+         * @brief Get the vector coefficient b' = - A R^T d + b in the world frame.
+         * 
+         * @param d Origin of the body frame in the world frame, shape: (dim_p,)
+         * @param q Unit quaternion [qx,qy,qz,qw] representing R(q), shape: (dim_q,)
+         * @return xt::xtensor<double, 1> b', shape: (N,)
+         */
+        xt::xtensor<double, 1> getWorldVectorCoefficient(const xt::xtensor<double, 1>& d, const xt::xtensor<double, 1>& q) const;
 }; 
 
 

@@ -87,3 +87,15 @@ xt::xtensor<double, 3> LogSumExp2d::getBodyFdPdPdP(const xt::xtensor<double, 1>&
 
     return F_dpdpdp;
 }
+
+xt::xtensor<double, 2> LogSumExp2d::getWorldMatrixCoefficient(double theta) const {
+
+    xt::xtensor<double, 2> R = getRotationMatrix(theta);
+    return xt::linalg::dot(A, xt::transpose(R, {1,0}));
+}
+
+xt::xtensor<double, 1> LogSumExp2d::getWorldVectorCoefficient(const xt::xtensor<double, 1>& d, double theta) const {
+    
+    xt::xtensor<double, 2> R = getRotationMatrix(theta);
+    return -xt::linalg::dot(A, xt::linalg::dot(xt::transpose(R, {1,0}), d)) + b;
+}

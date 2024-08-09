@@ -68,7 +68,7 @@ class Ellipsoid2d : public ScalingFunction2d {
          */
         xt::xtensor<double, 3> getBodyFdPdPdP(const xt::xtensor<double, 1>& P) const override;
 
-         /**
+        /**
          * @brief Get the quadratic coefficient Q' = R Q R^T in the world frame.
          * 
          * @param theta Rotation angle representing R(theta)

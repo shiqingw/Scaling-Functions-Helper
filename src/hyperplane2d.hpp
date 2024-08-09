@@ -60,6 +60,23 @@ class Hyperplane2d : public ScalingFunction2d {
          * @return xt::xtensor<double, 3> d^3F/dPdPdP, shape: (dim_p, dim_p, dim_p)
          */
         xt::xtensor<double, 3> getBodyFdPdPdP(const xt::xtensor<double, 1>& P) const override;
+
+        /**
+         * @brief Get the slope a' = R a in the world frame.
+         * 
+         * @param theta Rotation angle representing R(theta)
+         * @return xt::xtensor<double, 1> a', shape: (dim_p,)
+         */
+        xt::xtensor<double, 1> getWorldSlope(double theta) const;
+
+        /**
+         * @brief Get the offset b' = b - a^T R^T d in the world frame.
+         * 
+         * @param d Origin of the body frame in the world frame, shape: (dim_p,)
+         * @param theta Rotation angle representing R(theta)
+         * @return double b'
+         */
+        double getWorldOffset(const xt::xtensor<double, 1>& d, double theta) const;
 }; 
 
 
