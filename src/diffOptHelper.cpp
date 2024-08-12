@@ -424,7 +424,7 @@ std::tuple<double, xt::xtensor<double, 1>, xt::xtensor<double, 2>> getGradientAn
         xt::xtensor<double, 2> F1_dxdx = xt::zeros<double>({dim_x, dim_x});
         auto tmp_F1_dxdx_view = xt::view(F1_dxdx, xt::range(0, dim_x1), xt::range(0, dim_x1));
         xt::noalias(tmp_F1_dxdx_view) = F1_dx1dx1;
-        
+
         xt::xtensor<double, 3> F1_dpdpdx = xt::zeros<double>({dim_p, dim_p, dim_x});
         auto tmp_F1_dpdpdx_view = xt::view(F1_dpdpdx, xt::all(), xt::all(), xt::range(0, dim_x1));
         xt::noalias(tmp_F1_dpdpdx_view) = F1_dpdpdx1;
@@ -433,7 +433,9 @@ std::tuple<double, xt::xtensor<double, 1>, xt::xtensor<double, 2>> getGradientAn
         auto tmp_F1_dpdxdx_view = xt::view(F1_dpdxdx, xt::all(), xt::range(0, dim_x1), xt::range(0, dim_x1));
         xt::noalias(tmp_F1_dpdxdx_view) = F1_dpdx1dx1;
 
-        xt::xtensor<double, 1> F2_dp, F2_dx2, F2_dpdp, F2_dpdx2, F2_dx2dx2, F2_dpdpdp, F2_dpdpdx2, F2_dpdx2dx2;
+        xt::xtensor<double, 1> F2_dp, F2_dx2;
+        xt::xtensor<double, 2> F2_dpdp, F2_dpdx2, F2_dx2dx2;
+        xt::xtensor<double, 3> F2_dpdpdp, F2_dpdpdx2, F2_dpdx2dx2;
         std::tie(F2_dp, F2_dx2, F2_dpdp, F2_dpdx2, F2_dx2dx2, F2_dpdpdp, F2_dpdpdx2, F2_dpdx2dx2) 
             = SF2->getWorldFFirstToThirdDers(p, d2, q2);
 
@@ -463,7 +465,7 @@ std::tuple<double, xt::xtensor<double, 1>, xt::xtensor<double, 2>> getGradientAn
         std::tie(alpha_dx, alpha_dxdx) = getGradientAndHessianGeneral(dual_var, 
             F1_dp, F2_dp, F1_dx, F2_dx, F1_dpdp, F2_dpdp, F1_dpdx, F2_dpdx, F1_dxdx, F2_dxdx,
             F1_dpdpdp, F2_dpdpdp, F1_dpdpdx, F2_dpdpdx, F1_dpdxdx, F2_dpdxdx);
-        
+            
         return std::make_tuple(alpha, alpha_dx, alpha_dxdx);
         
     } else { // one of the scaling functions is moving
