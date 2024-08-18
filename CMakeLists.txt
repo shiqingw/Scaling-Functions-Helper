@@ -6,6 +6,7 @@ project(scalingFunctionsHelper VERSION 0.1.0)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 find_package(OpenBLAS REQUIRED)
+find_package(LAPACK REQUIRED)
 find_package(Python REQUIRED COMPONENTS Interpreter Development NumPy)
 find_package(pybind11 REQUIRED CONFIG)
 find_package(xtl REQUIRED)
@@ -43,14 +44,11 @@ if (BUILD_PYTHON_MODULE)
         # xtensor::use_xsimd # Do not use this, code gets slower
         xtensor-python
         Python::NumPy
-        ${OpenBLAS_LIBRARIES}  # Use the variable set by find_package if available
+        ${OpenBLAS_LIB}
+        LAPACK::LAPACK
         pthread
         m
         dl
-    )
-
-    target_include_directories(scalingFunctionsHelperPy PUBLIC
-        ${OpenBLAS_INCLUDE_DIRS}  # Include this if find_package sets this variable
     )
 
     target_compile_definitions(scalingFunctionsHelperPy PRIVATE VERSION_INFO=0.1.0)
@@ -81,14 +79,11 @@ else()
     # xsimd # Do not use this, code gets slower
     # xtensor::use_xsimd # Do not use this, code gets slower
     xtensor-python
-    ${OpenBLAS_LIBRARIES}
+    ${OpenBLAS_LIB}
+    LAPACK::LAPACK
     pthread
     m
     dl
-    )
-
-    target_include_directories(scalingFunctionsHelper PUBLIC
-    ${OpenBLAS_INCLUDE_DIRS}
     )
 
     target_compile_definitions(scalingFunctionsHelper PRIVATE VERSION_INFO=0.1.0)

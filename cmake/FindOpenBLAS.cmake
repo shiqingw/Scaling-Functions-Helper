@@ -8,6 +8,7 @@ SET(Open_BLAS_INCLUDE_SEARCH_PATHS
     /usr/local/include/openblas-base
     /usr/local/opt/openblas/include
     /opt/OpenBLAS/include
+    /opt/homebrew/opt/openblas/include
     $ENV{OpenBLAS_HOME}
     $ENV{OpenBLAS_HOME}/include
     $ENV{OpenBLAS_HOME}/include/openblas
@@ -25,6 +26,7 @@ SET(Open_BLAS_LIB_SEARCH_PATHS
     /usr/local/lib64
     /usr/local/opt/openblas/lib
     /opt/OpenBLAS/lib
+    /opt/homebrew/opt/openblas/lib
     $ENV{OpenBLAS}
     $ENV{OpenBLAS}/lib
     $ENV{OpenBLAS_HOME}
@@ -42,7 +44,7 @@ IF(NOT OpenBLAS_INCLUDE_DIR)
     MESSAGE(STATUS "Could not find OpenBLAS include. Turning OpenBLAS_FOUND off")
 ENDIF()
 
-#    Check libraries
+# Check libraries
 IF(NOT OpenBLAS_LIB)
     SET(OpenBLAS_FOUND OFF)
     MESSAGE(STATUS "Could not find OpenBLAS lib. Turning OpenBLAS_FOUND off")
