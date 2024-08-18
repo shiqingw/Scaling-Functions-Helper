@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.18..3.20)
 
 project(scalingFunctionsHelper VERSION 0.1.0)
 
+# Add the cmake directory to the module path
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 find_package(OpenBLAS REQUIRED)
 find_package(Python REQUIRED COMPONENTS Interpreter Development NumPy)
 find_package(pybind11 REQUIRED CONFIG)
